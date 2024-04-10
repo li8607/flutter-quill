@@ -303,9 +303,11 @@ class QuillController extends ChangeNotifier {
       var shouldRetainDelta = toggledStyle.isNotEmpty &&
           delta.isNotEmpty &&
           delta.length <= 2 &&
-          delta.last.isInsert &&
+          delta.last.isInsert 
+          // &&
           // pasted text should not use toggledStyle
-          (data is! String || data.length < 2);
+          // (data is! String || data.length < 2)
+          ;
       if (shouldRetainDelta &&
           toggledStyle.isNotEmpty &&
           delta.length == 2 &&
