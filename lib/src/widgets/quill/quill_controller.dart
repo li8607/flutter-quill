@@ -25,6 +25,7 @@ class QuillController extends ChangeNotifier {
     this.onSelectionCompleted,
     this.onSelectionChanged,
     this.readOnly = false,
+    this.searchText,
   })  : _document = document,
         _selection = selection;
 
@@ -44,6 +45,13 @@ class QuillController extends ChangeNotifier {
   Document _document;
 
   Document get document => _document;
+
+  String? searchText;
+
+  void setSearchText(String searchText) {
+    this.searchText = searchText;
+    notifyListeners();
+  }
 
   set document(Document doc) {
     _document = doc;

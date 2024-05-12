@@ -331,6 +331,36 @@ class _TextLineState extends State<TextLine> {
 
     final recognizer = _getRecognizer(node, isLink);
 
+    // 在这里计算出来，搜索的内容
+    final text = widget.controller.searchText ?? '';
+    if (text.isNotEmpty && textNode.value.contains(text)) {
+      final theme = Theme.of(context);
+      final results = textNode.value.split(text);
+      final spans = <TextSpan>[];
+      for (var i = 0; i < results.length; i++) {
+        spans.add(TextSpan(text: results[i]));
+        if (i != results.length - 1) {
+          spans.add(
+            TextSpan(
+              text: text,
+              style: TextStyle(
+                backgroundColor: theme.colorScheme.primary,
+                color: theme.colorScheme.onPrimary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          );
+        }
+      }
+      return TextSpan(
+        children: spans,
+        style: _getInlineTextStyle(
+            textNode, defaultStyles, nodeStyle, lineStyle, isLink),
+        recognizer: recognizer,
+        mouseCursor: (recognizer != null) ? SystemMouseCursors.click : null,
+      );
+    }
+
     return TextSpan(
       text: textNode.value,
       style: _getInlineTextStyle(
