@@ -560,13 +560,19 @@ class PreserveInlineStylesRule extends InsertRule {
 
     final itr = DeltaIterator(document);
     var prev = itr.skip(len == 0 ? index : index + 1);
-    if (prev == null ||
-        (prev.data is String && (prev.data as String).endsWith('\n'))) {
-      prev = itr.next();
-    }
 
-    if (prev.data is! String) {
-      return null;
+    if (prev == null || prev.data is! String) return null;
+
+    if ((prev.data as String).endsWith('\n')) {
+      if (prev.attributes != null) {
+        for (final key in prev.attributes!.keys) {
+          if (!Attribute.inlineKeys.contains(key)) {
+            return null;
+          }
+        }
+      }
+      prev = itr
+          .next(); // at the start of a line, apply the style for the current line and not the style for the preceding line
     }
 
     final attributes = prev.attributes;
