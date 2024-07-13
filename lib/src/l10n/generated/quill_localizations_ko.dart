@@ -209,6 +209,9 @@ class FlutterQuillLocalizationsKo extends FlutterQuillLocalizations {
   String get color => '색상';
 
   @override
+  String get lineheight => '선 높이';
+
+  @override
   String get findText => '찾기';
 
   @override
@@ -290,4 +293,7 @@ class FlutterQuillLocalizationsKo extends FlutterQuillLocalizations {
 
   @override
   String get paste => '붙여넣기';
+
+  @override
+  String get insertTable => 'Insert table';
 }

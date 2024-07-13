@@ -577,6 +577,12 @@ abstract class FlutterQuillLocalizations {
   /// **'Color'**
   String get color;
 
+  /// No description provided for @lineheight.
+  ///
+  /// In en, this message translates to:
+  /// **'Line height'**
+  String get lineheight;
+
   /// No description provided for @findText.
   ///
   /// In en, this message translates to:
@@ -738,6 +744,12 @@ abstract class FlutterQuillLocalizations {
   /// In en, this message translates to:
   /// **'Paste'**
   String get paste;
+
+  /// No description provided for @insertTable.
+  ///
+  /// In en, this message translates to:
+  /// **'Insert table'**
+  String get insertTable;
 }
 
 class _FlutterQuillLocalizationsDelegate

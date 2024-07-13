@@ -209,6 +209,9 @@ class FlutterQuillLocalizationsKu extends FlutterQuillLocalizations {
   String get color => 'ڕەنگ';
 
   @override
+  String get lineheight => 'بەرزی هێڵ';
+
+  @override
   String get findText => 'دۆزینەوەی نوسین';
 
   @override
@@ -294,6 +297,9 @@ class FlutterQuillLocalizationsKu extends FlutterQuillLocalizations {
 
   @override
   String get paste => 'Paste';
+
+  @override
+  String get insertTable => 'Insert table';
 }
 
 /// The translations for Kurdish (`ku_CKB`).
@@ -500,6 +506,9 @@ class FlutterQuillLocalizationsKuCkb extends FlutterQuillLocalizationsKu {
 
   @override
   String get color => 'ڕەنگ';
+
+  @override
+  String get lineheight => 'بەرزی هێڵ';
 
   @override
   String get findText => 'دۆزینەوەی نوسین';

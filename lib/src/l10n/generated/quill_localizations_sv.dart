@@ -209,6 +209,9 @@ class FlutterQuillLocalizationsSv extends FlutterQuillLocalizations {
   String get color => 'Färg';
 
   @override
+  String get lineheight => 'Radavstånd';
+
+  @override
   String get findText => 'Hitta text';
 
   @override
@@ -293,4 +296,7 @@ class FlutterQuillLocalizationsSv extends FlutterQuillLocalizations {
 
   @override
   String get paste => 'Paste';
+
+  @override
+  String get insertTable => 'Insert table';
 }

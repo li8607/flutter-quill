@@ -209,6 +209,9 @@ class FlutterQuillLocalizationsRo extends FlutterQuillLocalizations {
   String get color => 'Culoare';
 
   @override
+  String get lineheight => 'Inaltimea liniei';
+
+  @override
   String get findText => 'Găsește text';
 
   @override
@@ -296,6 +299,9 @@ class FlutterQuillLocalizationsRo extends FlutterQuillLocalizations {
 
   @override
   String get paste => 'Paste';
+
+  @override
+  String get insertTable => 'Insert table';
 }
 
 /// The translations for Romanian Moldavian Moldovan, as used in Romania (`ro_RO`).
@@ -502,6 +508,9 @@ class FlutterQuillLocalizationsRoRo extends FlutterQuillLocalizationsRo {
 
   @override
   String get color => 'Culoare';
+
+  @override
+  String get lineheight => 'Inaltimea liniei';
 
   @override
   String get findText => 'Găsește text';

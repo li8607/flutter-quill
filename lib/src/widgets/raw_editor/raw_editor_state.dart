@@ -184,7 +184,7 @@ class QuillRawEditorState extends EditorState
       return;
     }
 
-    final clipboardService = ClipboardServiceProvider.instacne;
+    final clipboardService = ClipboardServiceProvider.instance;
 
     final onImagePaste = widget.configurations.onImagePaste;
     if (onImagePaste != null) {
@@ -701,6 +701,18 @@ class QuillRawEditorState extends EditorState
               control: !isDesktopMacOS,
               meta: isDesktopMacOS,
             ): const OpenSearchIntent(),
+
+            // Navigate to the start or end of the document
+            SingleActivator(
+              LogicalKeyboardKey.home,
+              control: !isDesktopMacOS,
+              meta: isDesktopMacOS,
+            ): const ScrollToDocumentBoundaryIntent(forward: false),
+            SingleActivator(
+              LogicalKeyboardKey.end,
+              control: !isDesktopMacOS,
+              meta: isDesktopMacOS,
+            ): const ScrollToDocumentBoundaryIntent(forward: true),
           }, {
             ...?widget.configurations.customShortcuts
           }),
@@ -863,6 +875,14 @@ class QuillRawEditorState extends EditorState
       ..formatSelection(attribute)
       // Remove the added newline.
       ..replaceText(controller.selection.baseOffset + 1, 1, '', null);
+    //
+    final style =
+        controller.document.collectStyle(controller.selection.baseOffset, 0);
+    if (style.isNotEmpty) {
+      for (final attr in style.values) {
+        controller.formatSelection(attr);
+      }
+    }
   }
 
   void _handleSelectionChanged(
@@ -1674,7 +1694,8 @@ class QuillRawEditorState extends EditorState
     IndentSelectionIntent: _indentSelectionAction,
     QuillEditorApplyHeaderIntent: _applyHeaderAction,
     QuillEditorApplyCheckListIntent: _applyCheckListAction,
-    QuillEditorApplyLinkIntent: QuillEditorApplyLinkAction(this)
+    QuillEditorApplyLinkIntent: QuillEditorApplyLinkAction(this),
+    ScrollToDocumentBoundaryIntent: NavigateToDocumentBoundaryAction(this)
   };
 
   @override
