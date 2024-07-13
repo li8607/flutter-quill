@@ -209,6 +209,9 @@ class FlutterQuillLocalizationsZh extends FlutterQuillLocalizations {
   String get color => '颜色';
 
   @override
+  String get lineheight => '行高';
+
+  @override
   String get findText => '搜索文本';
 
   @override
@@ -290,6 +293,9 @@ class FlutterQuillLocalizationsZh extends FlutterQuillLocalizations {
 
   @override
   String get paste => 'Paste';
+
+  @override
+  String get insertTable => 'Insert table';
 }
 
 /// The translations for Chinese, as used in China (`zh_CN`).
@@ -496,6 +502,9 @@ class FlutterQuillLocalizationsZhCn extends FlutterQuillLocalizationsZh {
 
   @override
   String get color => '颜色';
+
+  @override
+  String get lineheight => '行高';
 
   @override
   String get findText => '搜索文本';
@@ -741,6 +750,9 @@ class FlutterQuillLocalizationsZhHk extends FlutterQuillLocalizationsZh {
 
   @override
   String get color => '顏色';
+
+  @override
+  String get lineheight => '行高';
 
   @override
   String get findText => '搜尋文本';

@@ -209,6 +209,9 @@ class FlutterQuillLocalizationsSw extends FlutterQuillLocalizations {
   String get color => 'Rangi';
 
   @override
+  String get lineheight => 'Urefu wa mstari';
+
+  @override
   String get findText => 'Pata Maandishi';
 
   @override
@@ -292,4 +295,7 @@ class FlutterQuillLocalizationsSw extends FlutterQuillLocalizations {
 
   @override
   String get paste => 'Paste';
+
+  @override
+  String get insertTable => 'Insert table';
 }

@@ -4,6 +4,180 @@
 
 All notable changes to this project will be documented in this file.
 
+## 9.5.15
+
+* Update delta_from_html to fix nested lists issues and more by @CatHood0 in https://github.com/singerdmx/flutter-quill/pull/2000
+
+
+**Full Changelog**: https://github.com/singerdmx/flutter-quill/compare/v9.5.14...v9.5.15
+
+## 9.5.14
+
+* docs(readme): update 'Conversion to HTML' section to include more details by @EchoEllet in https://github.com/singerdmx/flutter-quill/pull/1996
+* Update flutter_quill_delta_from_html on pubspec.yaml to fix current issues by @CatHood0 in https://github.com/singerdmx/flutter-quill/pull/1999
+
+
+**Full Changelog**: https://github.com/singerdmx/flutter-quill/compare/v9.5.13...v9.5.14
+
+## 9.5.13
+
+* Added new default ConverterOptions configurations by @CatHood0 in https://github.com/singerdmx/flutter-quill/pull/1990
+
+
+**Full Changelog**: https://github.com/singerdmx/flutter-quill/compare/v9.5.12...v9.5.13
+
+## 9.5.12
+
+* fix: Fixed passing textStyle to formula embed by @shubham030 in https://github.com/singerdmx/flutter-quill/pull/1989
+
+## New Contributors
+* @shubham030 made their first contribution in https://github.com/singerdmx/flutter-quill/pull/1989
+
+**Full Changelog**: https://github.com/singerdmx/flutter-quill/compare/v9.5.11...v9.5.12
+
+## 9.5.11
+
+* Update flutter_quill_delta_from_html in pubspec.yaml by @CatHood0 in https://github.com/singerdmx/flutter-quill/pull/1988
+
+
+**Full Changelog**: https://github.com/singerdmx/flutter-quill/compare/v9.5.10...v9.5.11
+
+## 9.5.10
+
+* chore: remove dependency html converter by @ellet0 in https://github.com/singerdmx/flutter-quill/pull/1987
+* Fix: LineHeight button to use MenuAnchor by @AtlasAutocode in https://github.com/singerdmx/flutter-quill/pull/1986
+
+
+**Full Changelog**: https://github.com/singerdmx/flutter-quill/compare/v9.5.9...v9.5.10
+
+## 9.5.9
+
+* Update pubspec.yaml to remove html2md by @singerdmx in https://github.com/singerdmx/flutter-quill/pull/1985
+
+
+**Full Changelog**: https://github.com/singerdmx/flutter-quill/compare/v9.5.8...v9.5.9
+
+## 9.5.8
+
+* fix(typo): fix typo ClipboardServiceProvider.instacne by @ellet0 in https://github.com/singerdmx/flutter-quill/pull/1983
+* Feat: New way to get Delta from HTML inputs by @CatHood0 in https://github.com/singerdmx/flutter-quill/pull/1984
+
+
+**Full Changelog**: https://github.com/singerdmx/flutter-quill/compare/v9.5.7...v9.5.8
+
+## 9.5.7
+
+* refactor: context menu function, add test code by @n7484443 in https://github.com/singerdmx/flutter-quill/pull/1979
+* Fix: PreserveInlineStylesRule by @AtlasAutocode in https://github.com/singerdmx/flutter-quill/pull/1980
+
+
+**Full Changelog**: https://github.com/singerdmx/flutter-quill/compare/v9.5.6...v9.5.7
+
+## 9.5.6
+
+* fix: common link is detected as a video link by @CatHood0 in https://github.com/singerdmx/flutter-quill/pull/1978
+
+
+**Full Changelog**: https://github.com/singerdmx/flutter-quill/compare/v9.5.5...v9.5.6
+
+## 9.5.5
+
+* fix: context menu behavior in mouse, desktop env by @n7484443 in https://github.com/singerdmx/flutter-quill/pull/1976
+
+
+**Full Changelog**: https://github.com/singerdmx/flutter-quill/compare/v9.5.4...v9.5.5
+
+## 9.5.4
+
+* Feat: Line height support by @CatHood0 in https://github.com/singerdmx/flutter-quill/pull/1972
+
+
+**Full Changelog**: https://github.com/singerdmx/flutter-quill/compare/v9.5.3...v9.5.4
+
+## 9.5.3
+
+* Perf: Performance optimization by @Alspb in https://github.com/singerdmx/flutter-quill/pull/1964
+
+
+**Full Changelog**: https://github.com/singerdmx/flutter-quill/compare/v9.5.2...v9.5.3
+
+## 9.5.2
+
+* Fix style settings by @AtlasAutocode in https://github.com/singerdmx/flutter-quill/pull/1962
+
+
+**Full Changelog**: https://github.com/singerdmx/flutter-quill/compare/v9.5.1...v9.5.2
+
+## 9.5.1
+
+* feat(extensions): Youtube Video Player Support Mode by @ellet0 in https://github.com/singerdmx/flutter-quill/pull/1916
+
+
+**Full Changelog**: https://github.com/singerdmx/flutter-quill/compare/v9.5.0...v9.5.1
+
+## 9.5.0
+
+* Partial support for table embed by @CatHood0 in https://github.com/singerdmx/flutter-quill/pull/1960
+
+
+**Full Changelog**: https://github.com/singerdmx/flutter-quill/compare/v9.4.9...v9.5.0
+
+## 9.4.9
+
+* Upgrade photo_view to 0.15.0 for flutter_quill_extensions by @singerdmx in https://github.com/singerdmx/flutter-quill/pull/1958
+
+
+**Full Changelog**: https://github.com/singerdmx/flutter-quill/compare/v9.4.8...v9.4.9
+
+## 9.4.8
+
+* Add support for html underline and videos  by @CatHood0 in https://github.com/singerdmx/flutter-quill/pull/1955
+
+
+**Full Changelog**: https://github.com/singerdmx/flutter-quill/compare/v9.4.7...v9.4.8
+
+## 9.4.7
+
+* fixed #1953 italic detection error by @CatHood0 in https://github.com/singerdmx/flutter-quill/pull/1954
+
+## New Contributors
+* @CatHood0 made their first contribution in https://github.com/singerdmx/flutter-quill/pull/1954
+
+**Full Changelog**: https://github.com/singerdmx/flutter-quill/compare/v9.4.6...v9.4.7
+
+## 9.4.6
+
+* fix: search dialog throw an exception due to missing FlutterQuillLocalizations.delegate in the editor by @ellet0 in https://github.com/singerdmx/flutter-quill/pull/1938
+* fix(editor): implement editor shortcut action for home and end keys to fix exception about unimplemented ScrollToDocumentBoundaryIntent by @ellet0 in https://github.com/singerdmx/flutter-quill/pull/1937
+
+
+**Full Changelog**: https://github.com/singerdmx/flutter-quill/compare/v9.4.5...v9.4.6
+
+## 9.4.5
+
+* fix: color picker hex unfocus on web by @geronimol in https://github.com/singerdmx/flutter-quill/pull/1934
+
+## New Contributors
+* @geronimol made their first contribution in https://github.com/singerdmx/flutter-quill/pull/1934
+
+**Full Changelog**: https://github.com/singerdmx/flutter-quill/compare/v9.4.4...v9.4.5
+
+## 9.4.4
+
+* fix: Enabled link regex to be overridden by @JoepHeijnen in https://github.com/singerdmx/flutter-quill/pull/1931
+
+
+**Full Changelog**: https://github.com/singerdmx/flutter-quill/compare/v9.4.3...v9.4.4
+
+## 9.4.3
+
+* Fix: setState() called after dispose(): QuillToolbarClipboardButtonState #1895 by @windows7lake in https://github.com/singerdmx/flutter-quill/pull/1926
+
+## New Contributors
+* @windows7lake made their first contribution in https://github.com/singerdmx/flutter-quill/pull/1926
+
+**Full Changelog**: https://github.com/singerdmx/flutter-quill/compare/v9.4.2...v9.4.3
+
 ## 9.4.2
 
 * Respect autofocus, closes #1923 by @Guillergood in https://github.com/singerdmx/flutter-quill/pull/1924

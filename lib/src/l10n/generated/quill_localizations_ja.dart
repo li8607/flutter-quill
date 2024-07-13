@@ -209,6 +209,9 @@ class FlutterQuillLocalizationsJa extends FlutterQuillLocalizations {
   String get color => 'Color';
 
   @override
+  String get lineheight => '行の高さ';
+
+  @override
   String get findText => '検索テキスト';
 
   @override
@@ -290,4 +293,7 @@ class FlutterQuillLocalizationsJa extends FlutterQuillLocalizations {
 
   @override
   String get paste => 'Paste';
+
+  @override
+  String get insertTable => 'Insert table';
 }

@@ -209,6 +209,9 @@ class FlutterQuillLocalizationsDa extends FlutterQuillLocalizations {
   String get color => 'Farve';
 
   @override
+  String get lineheight => 'altezza della linea';
+
+  @override
   String get findText => 'Find text';
 
   @override
@@ -291,4 +294,7 @@ class FlutterQuillLocalizationsDa extends FlutterQuillLocalizations {
 
   @override
   String get paste => 'Paste';
+
+  @override
+  String get insertTable => 'Insert table';
 }

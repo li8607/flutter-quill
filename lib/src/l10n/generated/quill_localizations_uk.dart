@@ -209,6 +209,9 @@ class FlutterQuillLocalizationsUk extends FlutterQuillLocalizations {
   String get color => 'Колір';
 
   @override
+  String get lineheight => 'Висота лінії';
+
+  @override
   String get findText => 'Знайти текст';
 
   @override
@@ -297,4 +300,7 @@ class FlutterQuillLocalizationsUk extends FlutterQuillLocalizations {
 
   @override
   String get paste => 'Paste';
+
+  @override
+  String get insertTable => 'Insert table';
 }

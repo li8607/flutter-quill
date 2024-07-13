@@ -209,6 +209,9 @@ class FlutterQuillLocalizationsId extends FlutterQuillLocalizations {
   String get color => 'Warna';
 
   @override
+  String get lineheight => 'Tinggi garis';
+
+  @override
   String get findText => 'Temukan Teks';
 
   @override
@@ -295,4 +298,7 @@ class FlutterQuillLocalizationsId extends FlutterQuillLocalizations {
 
   @override
   String get paste => 'Paste';
+
+  @override
+  String get insertTable => 'Insert table';
 }

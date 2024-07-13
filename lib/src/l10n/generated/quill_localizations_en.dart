@@ -209,6 +209,9 @@ class FlutterQuillLocalizationsEn extends FlutterQuillLocalizations {
   String get color => 'Color';
 
   @override
+  String get lineheight => 'Line height';
+
+  @override
   String get findText => 'Find text';
 
   @override
@@ -293,6 +296,9 @@ class FlutterQuillLocalizationsEn extends FlutterQuillLocalizations {
 
   @override
   String get paste => 'Paste';
+
+  @override
+  String get insertTable => 'Insert table';
 }
 
 /// The translations for English, as used in the United States (`en_US`).
@@ -478,6 +484,9 @@ class FlutterQuillLocalizationsEnUs extends FlutterQuillLocalizationsEn {
 
   @override
   String get color => 'Color';
+
+  @override
+  String get lineheight => 'Line height';
 
   @override
   String get findText => 'Find text';

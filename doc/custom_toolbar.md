@@ -6,8 +6,8 @@ You can use the `QuillBaseToolbar` which is the base for the `QuillToolbar`
 Example:
 
 ```dart
-QuillToolbar(
-  configurations: const QuillToolbarConfigurations(
+QuillToolbar.simple(
+  configurations: const QuillSimpleToolbarConfigurations(
     buttonOptions: QuillToolbarButtonOptions(
       base: QuillToolbarBaseButtonOptions(
         globalIconSize: 20,
@@ -71,6 +71,14 @@ QuillToolbar(
         QuillToolbarColorButton(
           controller: controller,
           isBackground: true,
+        ),
+        const VerticalDivider(),
+        // This is an implementation that only is used on
+        // flutter_quill and it's not originally 
+        // implemented in Quill JS API, so it could cause conflicts
+        // with the original Quill Delta format
+        QuillToolbarSelectLineHeightStyleDropdownButton(
+          controller: globalController,
         ),
         const VerticalDivider(),
         QuillToolbarSelectHeaderStyleButton(
