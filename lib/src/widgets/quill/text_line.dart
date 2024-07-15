@@ -17,7 +17,6 @@ import '../../utils/platform.dart';
 import '../others/box.dart';
 import '../others/delegate.dart';
 import '../others/keyboard_listener.dart';
-import '../others/link.dart';
 import '../others/proxy.dart';
 import '../others/text_selection.dart';
 
@@ -68,10 +67,10 @@ class _TextLineState extends State<TextLine> {
       setState(() {
         _metaOrControlPressed = newValue;
         _linkRecognizers
-        ..forEach((key, value) {
-          value.dispose();
-        })
-        ..clear();
+          ..forEach((key, value) {
+            value.dispose();
+          })
+          ..clear();
       });
     }
   }

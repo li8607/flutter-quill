@@ -4,6 +4,39 @@
 
 All notable changes to this project will be documented in this file.
 
+## 9.5.19
+
+* fixed #1835 Embed Reloads on Cmd Key Press by @li8607 in https://github.com/singerdmx/flutter-quill/pull/2013
+
+## New Contributors
+* @li8607 made their first contribution in https://github.com/singerdmx/flutter-quill/pull/2013
+
+**Full Changelog**: https://github.com/singerdmx/flutter-quill/compare/v9.5.18...v9.5.19
+
+## 9.5.18
+
+* Refactor: Moved core link button functions to link.dart by @Alspb in https://github.com/singerdmx/flutter-quill/pull/2008
+* doc: more documentation about Rules by @CatHood0 in https://github.com/singerdmx/flutter-quill/pull/2014
+
+
+**Full Changelog**: https://github.com/singerdmx/flutter-quill/compare/v9.5.17...v9.5.18
+
+## 9.5.17
+
+* Feat(config): added option to disable automatic list conversion by @CatHood0 in https://github.com/singerdmx/flutter-quill/pull/2011
+
+
+**Full Changelog**: https://github.com/singerdmx/flutter-quill/compare/v9.5.16...v9.5.17
+
+## 9.5.16
+
+* chore: drop support for HTML, PDF, and Markdown converting functions by @EchoEllet in https://github.com/singerdmx/flutter-quill/pull/1997
+* docs(readme): update the extensions package to document the Rich Text Paste feature on web by @EchoEllet in https://github.com/singerdmx/flutter-quill/pull/2001
+* Fix(test): delta_x tests fail by wrong expected Delta for video embed by @CatHood0 in https://github.com/singerdmx/flutter-quill/pull/2010
+
+
+**Full Changelog**: https://github.com/singerdmx/flutter-quill/compare/v9.5.15...v9.5.16
+
 ## 9.5.15
 
 * Update delta_from_html to fix nested lists issues and more by @CatHood0 in https://github.com/singerdmx/flutter-quill/pull/2000
