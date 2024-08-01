@@ -6,8 +6,8 @@ with:
 
 ```dart
 QuillToolbar.simple(
+  controller: _controller,
   configurations: QuillSimpleToolbarConfigurations(
-    controller: _controller,
     sharedConfigurations: const QuillSharedConfigurations(
       locale: Locale('de'),
     ),
@@ -15,8 +15,8 @@ QuillToolbar.simple(
 ),
 Expanded(
   child: QuillEditor.basic(
+    controller: _controller,
     configurations: QuillEditorConfigurations(
-      controller: _controller,
       sharedConfigurations: const QuillSharedConfigurations(
         locale: Locale('de'),
       ),
@@ -27,9 +27,9 @@ Expanded(
 
 ## 🌐 Supported Locales
 
-Currently, translations are available for these 40 locales:
+Currently, translations are available for these 41 locales:
 
-* `ar`, `bg`, `bn`, `cs`, `da`, `de`
+* `ar`, `bg`, `bn`, `ca`, `cs`, `da`, `de`
 * `en`, `en_US`, `es`, `fa`, `fr`, `he`
 * `hi`, `id`, `it`, `ja`, `ko`, `ku`
 * `ms`, `ne`, `nl`, `no`, `pl`, `pt`
