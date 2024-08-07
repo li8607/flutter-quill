@@ -61,7 +61,7 @@ class QuillController extends ChangeNotifier {
   QuillEditorConfigurations get editorConfigurations =>
       _editorConfigurations ?? const QuillEditorConfigurations();
   set editorConfigurations(QuillEditorConfigurations? value) =>
-      _editorConfigurations = value;
+      _editorConfigurations = document.editorConfigurations = value;
 
   /// Toolbar configurations
   ///
@@ -86,6 +86,7 @@ class QuillController extends ChangeNotifier {
 
   set document(Document doc) {
     _document = doc;
+    _document.editorConfigurations = editorConfigurations;
 
     // Prevent the selection from
     _selection = const TextSelection(baseOffset: 0, extentOffset: 0);
@@ -529,7 +530,7 @@ class QuillController extends ChangeNotifier {
 
     /// Get the text for the selected region and expand the content of Embedded objects.
     _pastePlainText = document.getPlainText(
-        selection.start, selection.end - selection.start, editorConfigurations);
+        selection.start, selection.end - selection.start, true);
 
     /// Get the internal representation so it can be pasted into a QuillEditor with style retained.
     _pasteStyleAndEmbed = getAllIndividualSelectionStylesAndEmbed();
