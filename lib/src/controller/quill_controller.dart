@@ -330,6 +330,7 @@ class QuillController extends ChangeNotifier {
             textSelection.copyWith(
               baseOffset: textSelection.baseOffset + positionDelta,
               extentOffset: textSelection.extentOffset + positionDelta,
+              affinity: TextAffinity.upstream,
             ),
             insertNewline: data == '\n');
       }
