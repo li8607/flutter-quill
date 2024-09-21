@@ -182,6 +182,9 @@ class Document {
   /// Special case of no-selection at start of empty line: gets inline style(s) from preceding non-empty line.
   Style collectStyle(int index, int len) {
     var res = queryChild(index);
+    if (res.node == null) {
+      return const Style();
+    }
     if (len > 0) {
       return (res.node as Line).collectStyle(res.offset, len);
     }
@@ -192,17 +195,19 @@ class Document {
       while ((res.node as Line).length == 1 && index > 0) {
         res = queryChild(--index);
       }
-      // Get inline attributes from previous line
+      // Get inline attributes from previous line (link does not cross line breaks)
       final prev = (res.node as Line).collectStyle(res.offset, 0);
       final attributes = <String, Attribute>{};
       for (final attr in prev.attributes.values) {
-        if (attr.scope == AttributeScope.inline) {
+        if (attr.scope == AttributeScope.inline &&
+            attr.key != Attribute.link.key) {
           attributes[attr.key] = attr;
         }
       }
-      // Combine with block attributes from current line
+      // Combine with block attributes from current line (exclude headers which apply only to the active line)
       for (final attr in current.attributes.values) {
-        if (attr.scope == AttributeScope.block) {
+        if (attr.scope == AttributeScope.block &&
+            attr.key != Attribute.header.key) {
           attributes[attr.key] = attr;
         }
       }
@@ -211,13 +216,15 @@ class Document {
     //
     final style = (res.node as Line).collectStyle(res.offset - 1, 0);
     final linkAttribute = style.attributes[Attribute.link.key];
-    if ((linkAttribute != null) &&
-        (linkAttribute.value !=
-            (res.node as Line)
-                .collectStyle(res.offset, len)
-                .attributes[Attribute.link.key]
-                ?.value)) {
-      return style.removeAll({linkAttribute});
+    if (linkAttribute != null) {
+      if ((res.node!.length - 1 == res.offset) ||
+          (linkAttribute.value !=
+              (res.node as Line)
+                  .collectStyle(res.offset, len)
+                  .attributes[Attribute.link.key]
+                  ?.value)) {
+        return style.removeAll({linkAttribute});
+      }
     }
     return style;
   }
@@ -264,11 +271,13 @@ class Document {
   ChildQuery queryChild(int offset) {
     // TODO: prevent user from moving caret after last line-break.
     final res = _root.queryChild(offset, true);
+    if (res.node == null) {
+      return res;
+    }
     if (res.node is Line) {
       return res;
     }
-    final block = res.node
-        as Block; // TODO: Can be nullable, handle this case to avoid cast exception
+    final block = res.node as Block;
     return block.queryChild(res.offset, true);
   }
 
