@@ -102,6 +102,7 @@ class ImageOptionsMenu extends StatelessWidget {
                 final item = DataWriterItem()..add(Formats.png(data));
                 await clipboard?.write([item]);
               }
+
               navigator.pop();
             },
           ),
