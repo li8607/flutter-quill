@@ -112,25 +112,17 @@ mixin RawEditorStateTextInputClientMixin on EditorState
     _textInputConnection!.show();
   }
 
-  TextRange _getComposingRange() {
-    if (_lastKnownRemoteTextEditingValue != null &&
-        _lastKnownRemoteTextEditingValue?.composing.isValid == true) {
-      return _lastKnownRemoteTextEditingValue!.composing;
-    } else if (textEditingValue.composing.isValid == true) {
-      return textEditingValue.composing;
-    } else {
-      return widget.controller.selection;
-    }
-  }
-
   void _updateComposingRectIfNeeded() {
-    final composingRange = _getComposingRange();
+    final composingRange = _lastKnownRemoteTextEditingValue?.composing ??
+        textEditingValue.composing;
     if (hasConnection) {
       assert(mounted);
-      final offset = composingRange.isValid ? composingRange.start : 0;
-      final composingRect =
-          renderEditor.getLocalRectForCaret(TextPosition(offset: offset));
-      _textInputConnection!.setComposingRect(composingRect);
+      if (composingRange.isValid) {
+        final offset = composingRange.start;
+        final composingRect =
+            renderEditor.getLocalRectForCaret(TextPosition(offset: offset));
+        _textInputConnection!.setComposingRect(composingRect);
+      }
       SchedulerBinding.instance
           .addPostFrameCallback((_) => _updateComposingRectIfNeeded());
     }

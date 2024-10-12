@@ -40,9 +40,6 @@ jobs:
 
       - name: 📥 Install Flutter dependencies
         run: flutter pub get
-
-      - name: 🚧 Enable local development environment (use the local packages)
-        run: dart ./scripts/enable_local_dev.dart
       
       # This is needed in order for the authentication to success
       # dart pub token add https://pub.dev --env-var PUB_TOKEN
@@ -95,10 +92,6 @@ jobs:
 
       - name: 📤 Publish flutter_quill
         run: flutter pub publish --force
-      
-      - name: 📤 Publish dart_quill_delta
-        run: flutter pub publish --force
-        working-directory: ./dart_quill_delta/
 
       - name: 📤 Publish flutter_quill_extensions
         run: flutter pub publish --force
@@ -108,6 +101,3 @@ jobs:
         run: flutter pub publish --force
         working-directory: ./flutter_quill_test/
 
-      - name: 📤 Publish quill_native_bridge
-        run: flutter pub publish --force
-        working-directory: ./quill_native_bridge/
