@@ -588,7 +588,7 @@ class QuillController extends ChangeNotifier {
     final onFilePaste = clipboardConfig?.onFilePaste;
     if (onFilePaste != null) {
       final files = await clipboardService.getFiles();
-      if (files != null) {
+      if (files.isNotEmpty) {
         for (final file in files) {
           final url = await onFilePaste(file);
           if (url != null) {
@@ -598,10 +598,10 @@ class QuillController extends ChangeNotifier {
               url.toBlockEmbed(),
               null,
             );
-            updateEditor?.call();
-            return true;
           }
         }
+        updateEditor?.call();
+        return true;
       }
     }
 
@@ -730,6 +730,6 @@ extension StringEx on String {
         return BlockEmbed.custom(CustomBlockEmbed('audio', this));
       }
     }
-    return null;
+    return BlockEmbed.custom(CustomBlockEmbed('custom', this));
   }
 }
