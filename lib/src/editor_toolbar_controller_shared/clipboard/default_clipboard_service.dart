@@ -1,5 +1,6 @@
 import 'dart:io' as io;
 
+import 'package:cross_file/src/types/interface.dart';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart' show experimental;
 
@@ -78,5 +79,21 @@ class DefaultClipboardService extends ClipboardService {
   Future<String?> getMarkdownFile() async {
     final htmlFileText = await _getClipboardFile(fileExtension: 'md');
     return htmlFileText;
+  }
+
+  @override
+  Future<List<XFile>?> getFiles() async {
+    final files = <XFile>[];
+    final filePaths = await QuillNativeProvider.instance.getClipboardFiles();
+    files.addAll(filePaths.map(XFile.new));
+    if (filePaths.isEmpty) {
+      final bytes = await getImageFile();
+      if (bytes != null) {
+        files.add(
+          XFile.fromData(bytes, mimeType: 'image/png'),
+        );
+      }
+    }
+    return null;
   }
 }

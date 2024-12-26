@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/services.dart' show ClipboardData, Clipboard;
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
+import 'package:mime/mime.dart';
 
 import '../../quill_delta.dart';
 import '../common/structs/image_url.dart';
@@ -584,39 +585,22 @@ class QuillController extends ChangeNotifier {
 
     final clipboardService = ClipboardServiceProvider.instance;
 
-    final onImagePaste = clipboardConfig?.onImagePaste;
-    if (onImagePaste != null) {
-      final imageBytes = await clipboardService.getImageFile();
-
-      if (imageBytes != null) {
-        final imageUrl = await onImagePaste(imageBytes);
-        if (imageUrl != null) {
-          replaceText(
-            plainTextEditingValue.selection.end,
-            0,
-            BlockEmbed.image(imageUrl),
-            null,
-          );
-          updateEditor?.call();
-          return true;
-        }
-      }
-    }
-
-    final onGifPaste = clipboardConfig?.onGifPaste;
-    if (onGifPaste != null) {
-      final gifBytes = await clipboardService.getGifFile();
-      if (gifBytes != null) {
-        final gifUrl = await onGifPaste(gifBytes);
-        if (gifUrl != null) {
-          replaceText(
-            plainTextEditingValue.selection.end,
-            0,
-            BlockEmbed.image(gifUrl),
-            null,
-          );
-          updateEditor?.call();
-          return true;
+    final onFilePaste = clipboardConfig?.onFilePaste;
+    if (onFilePaste != null) {
+      final files = await clipboardService.getFiles();
+      if (files != null) {
+        for (final file in files) {
+          final url = await onFilePaste(file);
+          if (url != null) {
+            replaceText(
+              plainTextEditingValue.selection.end,
+              0,
+              url.toBlockEmbed(),
+              null,
+            );
+            updateEditor?.call();
+            return true;
+          }
         }
       }
     }
@@ -731,5 +715,21 @@ class QuillController extends ChangeNotifier {
       sb.write(text[i]);
     }
     return sb.toString();
+  }
+}
+
+extension StringEx on String {
+  BlockEmbed? toBlockEmbed() {
+    final mimeType = lookupMimeType(this); // 获取文件的 MIME 类型
+    if (mimeType != null) {
+      if (mimeType.startsWith('image/')) {
+        return BlockEmbed.image(this);
+      } else if (mimeType.startsWith('video/')) {
+        return BlockEmbed.video(this);
+      } else if (mimeType.startsWith('audio/')) {
+        return BlockEmbed.custom(CustomBlockEmbed('audio', this));
+      }
+    }
+    return null;
   }
 }

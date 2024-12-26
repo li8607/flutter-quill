@@ -1,3 +1,4 @@
+import 'package:cross_file/cross_file.dart';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 
@@ -13,6 +14,7 @@ class QuillClipboardConfig {
     @experimental this.onGifPaste,
     @experimental this.onDeltaPaste,
     @experimental this.onPlainTextPaste,
+    @experimental this.onFilePaste,
     @experimental this.enableExternalRichPaste,
   });
 
@@ -77,6 +79,8 @@ class QuillClipboardConfig {
   /// Return modified text to override the pasted content, or `null` to use the default.
   @experimental
   final Future<String?> Function(String plainText)? onPlainTextPaste;
+
+  final Future<String?> Function(XFile file)? onFilePaste;
 
   /// Determines if rich text pasting from external sources (system clipboard) is enabled.
   ///
