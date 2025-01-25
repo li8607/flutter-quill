@@ -727,9 +727,9 @@ extension StringEx on String {
       } else if (mimeType.startsWith('video/')) {
         return BlockEmbed.video(this);
       } else if (mimeType.startsWith('audio/')) {
-        return BlockEmbed.custom(CustomBlockEmbed('audio', this));
+        return BlockEmbed("audio", this);
       }
     }
-    return BlockEmbed.custom(CustomBlockEmbed('custom', this));
+    return BlockEmbed.custom(CustomBlockEmbed(BlockEmbed.customType, this));
   }
 }
