@@ -19,6 +19,7 @@ import '../delegate.dart';
 import '../keyboard_listener.dart';
 import '../proxy.dart';
 import 'text_selection.dart';
+import 'dart:ui' as ui show PlaceholderAlignment;
 
 class TextLine extends StatefulWidget {
   const TextLine({
@@ -309,27 +310,35 @@ class _TextLineState extends State<TextLine> {
 
     final composingStart = widget.composingRange.start - node.documentOffset;
     final composingEnd = widget.composingRange.end - node.documentOffset;
-    final text = child.toPlainText();
+    final text = node.toPlainText();
 
     final textBefore = text.substring(0, composingStart);
     final textComposing = text.substring(composingStart, composingEnd);
     final textAfter = text.substring(composingEnd);
-
-    final composingStyle = child.style
-            ?.merge(const TextStyle(decoration: TextDecoration.underline)) ??
-        const TextStyle(decoration: TextDecoration.underline);
+    final composingStyle = child.style?.merge(TextStyle(
+          decoration: TextDecoration.underline,
+          decorationStyle: TextDecorationStyle.solid,
+          decorationColor: Theme.of(context).colorScheme.primary,
+          decorationThickness: 2,
+        )) ??
+        TextStyle(
+          decoration: TextDecoration.underline,
+          decorationStyle: TextDecorationStyle.solid,
+          decorationColor: Theme.of(context).colorScheme.primary,
+          decorationThickness: 2,
+        );
 
     return [
       TextSpan(
-        text: textBefore,
+        children: buildTab(textBefore, child.style),
         style: child.style,
       ),
       TextSpan(
-        text: textComposing,
+        children: buildTab(textComposing, composingStyle),
         style: composingStyle,
       ),
       TextSpan(
-        text: textAfter,
+        children: buildTab(textAfter, child.style),
         style: child.style,
       ),
     ];
@@ -481,11 +490,40 @@ class _TextLineState extends State<TextLine> {
 
     final recognizer = _getRecognizer(node, isLink);
     return TextSpan(
-      text: textNode.value,
+      children: buildTab(textNode.value, style),
       style: style,
       recognizer: recognizer,
       mouseCursor: (recognizer != null) ? SystemMouseCursors.click : null,
     );
+  }
+
+  List<InlineSpan> buildTab(String text, TextStyle? style) {
+    final list = text.split('\t');
+    final children = <InlineSpan>[];
+    if (list.isNotEmpty) {
+      for (var i = 0; i < list.length; i++) {
+        children.add(
+          TextSpan(
+            text: list[i],
+            style: style,
+          ),
+        );
+        if (i != list.length - 1) {
+          children.add(
+            WidgetSpan(
+              alignment: ui.PlaceholderAlignment.baseline,
+              child: Text(
+                '\u{3000}\u{3000}',
+                style: widget.styles.paragraph?.style,
+              ),
+              baseline: TextBaseline.alphabetic,
+              style: widget.styles.paragraph?.style,
+            ),
+          );
+        }
+      }
+    }
+    return children;
   }
 
   TextStyle _getInlineTextStyle(Style nodeStyle, DefaultStyles defaultStyles,
