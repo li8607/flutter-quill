@@ -12,6 +12,7 @@ import '../../../editor/widgets/default_styles.dart';
 import '../../../editor/widgets/delegate.dart';
 import '../../../editor/widgets/link.dart';
 import '../../../toolbar/theme/quill_dialog_theme.dart';
+import '../../widgets/text/utils/text_block_utils.dart';
 import '../builders/leading_block_builder.dart';
 import 'events/events.dart';
 
@@ -25,9 +26,10 @@ class QuillRawEditorConfig {
     required this.selectionColor,
     required this.selectionCtrls,
     required this.embedBuilder,
+    required this.textSpanBuilder,
     required this.autoFocus,
-    required this.characterShortcutEvents,
-    required this.spaceShortcutEvents,
+    this.characterShortcutEvents = const [],
+    this.spaceShortcutEvents = const [],
     @experimental this.onKeyPressed,
     this.showCursor = true,
     this.scrollable = true,
@@ -313,10 +315,10 @@ class QuillRawEditorConfig {
   ///
   /// Defaults to Material/Cupertino App Brightness.
   ///
-  /// The keyboardd appearance will set using the following:
+  /// The keyboard appearance will set using the following:
   ///
   /// ```dart
-  /// widget.configurations.keyboardAppearance ??
+  /// widget.config.keyboardAppearance ??
   /// CupertinoTheme.maybeBrightnessOf(context) ??
   /// Theme.of(context).brightness
   /// ```
@@ -359,6 +361,9 @@ class QuillRawEditorConfig {
   final CustomRecognizerBuilder? customRecognizerBuilder;
   final bool floatingCursorDisabled;
   final List<String> customLinkPrefixes;
+
+  /// Used to build the [InlineSpan]s containing text content.
+  final TextSpanBuilder textSpanBuilder;
 
   /// Configures the dialog theme.
   final QuillDialogTheme? dialogTheme;

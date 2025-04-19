@@ -14,6 +14,7 @@ import '../raw_editor/raw_editor.dart';
 import '../widgets/default_styles.dart';
 import '../widgets/delegate.dart';
 import '../widgets/link.dart';
+import '../widgets/text/utils/text_block_utils.dart';
 import 'search_config.dart';
 
 // IMPORTANT For project authors: The QuillEditorConfig.copyWith()
@@ -43,7 +44,7 @@ class QuillEditorConfig {
     this.maxContentWidth,
     this.customStyles,
     this.textCapitalization = TextCapitalization.sentences,
-    this.keyboardAppearance = Brightness.light,
+    this.keyboardAppearance,
     this.scrollPhysics,
     this.onLaunchUrl,
     this.onTapDown,
@@ -54,6 +55,7 @@ class QuillEditorConfig {
     @experimental this.onKeyPressed,
     this.enableAlwaysIndentOnTab = false,
     this.embedBuilders,
+    this.textSpanBuilder = defaultSpanBuilder,
     this.unknownEmbedBuilder,
     @experimental this.searchConfig = const QuillSearchConfig(),
     this.linkActionPickerDelegate = defaultLinkActionPickerDelegate,
@@ -137,7 +139,9 @@ class QuillEditorConfig {
 
   /// A handler for keys that are pressed when the editor is focused.
   ///
-  /// This feature is supported on **desktop devices only**.
+  /// This feature is supported on **desktop devices** and **mobile devices with a
+  /// hardware keyboard connected.** It is not supported by virtual on-screen
+  /// keyboards of touch devices.
   ///
   /// # Example:
   /// To prevent the user from removing any **Embed Object**, try:
@@ -310,17 +314,17 @@ class QuillEditorConfig {
   ///
   /// Defaults to Material/Cupertino App Brightness.
   ///
-  /// The keyboardd appearance will set using the following:
+  /// The keyboard appearance will set using the following:
   ///
   /// ```dart
-  /// widget.configurations.keyboardAppearance ??
+  /// widget.config.keyboardAppearance ??
   /// CupertinoTheme.maybeBrightnessOf(context) ??
   /// Theme.of(context).brightness
   /// ```
   ///
   /// See also: https://github.com/flutter/flutter/blob/06b9f7ba0bef2b5b44a643c73f4295a096de1202/packages/flutter/lib/src/services/text_input.dart#L621-L626
   /// and [QuillRawEditorConfig.keyboardAppearance]
-  final Brightness keyboardAppearance;
+  final Brightness? keyboardAppearance;
 
   /// The [ScrollPhysics] to use when vertically scrolling the input.
   ///
@@ -360,6 +364,8 @@ class QuillEditorConfig {
   final EmbedBuilder? unknownEmbedBuilder;
   final CustomStyleBuilder? customStyleBuilder;
   final CustomRecognizerBuilder? customRecognizerBuilder;
+
+  final TextSpanBuilder textSpanBuilder;
 
   /// See [search](https://github.com/singerdmx/flutter-quill/blob/master/doc/configurations/search.md)
   /// page for docs.
@@ -485,6 +491,7 @@ class QuillEditorConfig {
     bool Function(TapUpDetails details, TextPosition Function(Offset offset))?
         onTapUp,
     Iterable<EmbedBuilder>? embedBuilders,
+    TextSpanBuilder? textSpanBuilder,
     EmbedBuilder? unknownEmbedBuilder,
     CustomStyleBuilder? customStyleBuilder,
     CustomRecognizerBuilder? customRecognizerBuilder,
@@ -545,6 +552,7 @@ class QuillEditorConfig {
       onTapUp: onTapUp ?? this.onTapUp,
       onTapDown: onTapDown ?? this.onTapDown,
       embedBuilders: embedBuilders ?? this.embedBuilders,
+      textSpanBuilder: textSpanBuilder ?? this.textSpanBuilder,
       unknownEmbedBuilder: unknownEmbedBuilder ?? this.unknownEmbedBuilder,
       customStyleBuilder: customStyleBuilder ?? this.customStyleBuilder,
       customRecognizerBuilder:

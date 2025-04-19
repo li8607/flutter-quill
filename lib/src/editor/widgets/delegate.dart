@@ -199,10 +199,13 @@ class EditorTextSelectionGestureDetectorBuilder {
   /// onSingleTapUp for mouse right click
   @protected
   void onSecondarySingleTapUp(TapUpDetails details) {
-    // added to show toolbar by right click
-    if (checkSelectionToolbarShouldShow(isAdditionalAction: true)) {
-      editor!.showToolbar();
-    }
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      // added to show toolbar by right click
+      if (checkSelectionToolbarShouldShow(isAdditionalAction: true)) {
+        editor!.showToolbar();
+      }
+    });
+    SchedulerBinding.instance.scheduleFrame();
   }
 
   /// Handler for [EditorTextSelectionGestureDetector.onSingleTapCancel].
