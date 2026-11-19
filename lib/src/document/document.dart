@@ -29,7 +29,8 @@ class Document {
   }
 
   /// Creates new document from provided JSON `data`.
-  Document.fromJson(List data) : _delta = _transform(Delta.fromJson(data)) {
+  Document.fromJson(List data)
+    : _delta = _restoreVideoLineStarts(Delta.fromJson(data)) {
     loadDocument(_delta);
   }
 
@@ -510,6 +511,24 @@ class Document {
   bool get hasUndo => history.hasUndo;
 
   bool get hasRedo => history.hasRedo;
+
+  static Delta _restoreVideoLineStarts(Delta delta) {
+    final restored = Delta();
+    String? precedingText;
+    for (final op in delta.toList()) {
+      final data = op.data;
+      if (data is Map<String, dynamic> &&
+          data.containsKey(BlockEmbed.videoType) &&
+          precedingText != null &&
+          precedingText.isNotEmpty &&
+          !precedingText.endsWith('\n')) {
+        restored.insert('\n');
+      }
+      restored.push(op);
+      precedingText = data is String ? data : null;
+    }
+    return restored;
+  }
 
   static Delta _transform(Delta delta) {
     final res = Delta();

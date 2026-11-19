@@ -3,6 +3,31 @@ import 'package:flutter_quill/quill_delta.dart';
 import 'package:test/test.dart';
 
 void main() {
+  test('reopens legacy videos as blocks without adding blank lines', () {
+    final saved = [
+      {'insert': 'Before'},
+      {
+        'insert': {'video': 'clip.mp4'},
+      },
+      {'insert': '\nAfter\n'},
+    ];
+    final expected = [
+      {'insert': 'Before\n'},
+      {
+        'insert': {'video': 'clip.mp4'},
+      },
+      {'insert': '\nAfter\n'},
+    ];
+
+    final document = Document.fromJson(saved);
+    addTearDown(document.close);
+    final reopened = Document.fromJson(document.toDelta().toJson());
+    addTearDown(reopened.close);
+
+    expect(document.toDelta().toJson(), expected);
+    expect(reopened.toDelta().toJson(), expected);
+  });
+
   group('collectStyle', () {
     test('No selection', () {
       final delta = Delta()
