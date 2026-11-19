@@ -1,3 +1,4 @@
+import 'package:cross_file/cross_file.dart';
 import 'package:flutter/foundation.dart' show Uint8List;
 import 'package:flutter/services.dart' show Clipboard;
 import 'package:meta/meta.dart' show experimental;
@@ -20,6 +21,9 @@ abstract class ClipboardService {
 
   /// Return Gif from the Clipboard.
   Future<Uint8List?> getGifFile();
+
+  /// Returns the files available on the clipboard.
+  Future<List<XFile>> getFiles() async => [];
 
   /// Copy an image to the system clipboard to paste it on other apps.
   Future<void> copyImage(Uint8List imageBytes);

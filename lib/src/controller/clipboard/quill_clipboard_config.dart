@@ -1,3 +1,4 @@
+import 'package:cross_file/cross_file.dart';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 
@@ -13,6 +14,7 @@ class QuillClipboardConfig {
     @experimental this.onGifPaste,
     @experimental this.onRichTextPaste,
     @experimental this.onPlainTextPaste,
+    @experimental this.onFilePaste,
     @experimental this.enableExternalRichPaste,
   });
 
@@ -84,6 +86,10 @@ class QuillClipboardConfig {
   @experimental
   final Future<String?> Function(String plainText)? onPlainTextPaste;
 
+  /// Saves a clipboard file and returns the path to embed, or null to skip it.
+  @experimental
+  final Future<String?> Function(XFile file)? onFilePaste;
+
   /// Determines if rich text pasting from external sources (system clipboard) is enabled.
   ///
   /// When enabled, rich text content from other apps can be pasted into the editor,
@@ -93,7 +99,7 @@ class QuillClipboardConfig {
   /// and then paste it, use [onRichTextPaste] to customize the [Delta]
   /// before pasting it.
   ///
-  /// Defaults to `false`.
+  /// Defaults to `true`.
   ///
   /// See also: https://pub.dev/packages/flutter_quill#-rich-text-paste
   @experimental

@@ -1,12 +1,58 @@
+import 'package:cross_file/cross_file.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:flutter_quill/src/controller/clipboard/quill_controller_paste.dart';
 import 'package:flutter_quill/src/controller/clipboard/quill_controller_rich_paste.dart';
+import 'package:flutter_quill/src/editor_toolbar_controller_shared/clipboard/clipboard_service_provider.dart';
+import 'package:flutter_quill/src/editor_toolbar_controller_shared/clipboard/default_clipboard_service.dart';
 import 'package:test/test.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+
+  test('pastes a Finder file as a serializable attachment', () async {
+    final clipboard = FileClipboard([XFile('/example/notes.pdf')]);
+    ClipboardServiceProvider.setInstance(clipboard);
+    addTearDown(ClipboardServiceProvider.setInstanceToDefault);
+    final controller = QuillController.basic(
+      config: QuillControllerConfig(
+        clipboardConfig: QuillClipboardConfig(
+          onFilePaste: (file) async => file.name,
+        ),
+      ),
+    );
+    addTearDown(controller.dispose);
+
+    expect(await controller.clipboardPaste(), isTrue);
+    final saved = controller.document.toDelta().toJson();
+    expect(saved.first, {
+      'insert': {'custom': '{"custom":"notes.pdf"}'},
+    });
+    expect(Document.fromJson(saved).toDelta().toJson(), saved);
+  });
+
+  test('pastes external HTML before clipboard files by default', () async {
+    final clipboard = FileClipboard([
+      XFile('/example/notes.pdf'),
+    ], html: '<p><strong>Rich text</strong></p>');
+    ClipboardServiceProvider.setInstance(clipboard);
+    addTearDown(ClipboardServiceProvider.setInstanceToDefault);
+    final controller = QuillController.basic(
+      config: QuillControllerConfig(
+        clipboardConfig: QuillClipboardConfig(
+          onFilePaste: (file) async => file.name,
+        ),
+      ),
+    );
+    addTearDown(controller.dispose);
+
+    expect(await controller.clipboardPaste(), isTrue);
+    expect(controller.document.toDelta().toJson().first, {
+      'insert': 'Rich text',
+      'attributes': {'bold': true},
+    });
+  });
 
   group('copy', () {
     const testDocumentContents = 'data';
@@ -312,4 +358,23 @@ void main() {
       );
     });
   });
+}
+
+class FileClipboard extends DefaultClipboardService {
+  FileClipboard(this.files, {this.html});
+
+  final List<XFile> files;
+  final String? html;
+
+  @override
+  Future<List<XFile>> getFiles() async => files;
+
+  @override
+  Future<String?> getHtmlText() async => html;
+
+  @override
+  Future<String?> getHtmlFile() async => null;
+
+  @override
+  Future<String?> getMarkdownFile() async => null;
 }

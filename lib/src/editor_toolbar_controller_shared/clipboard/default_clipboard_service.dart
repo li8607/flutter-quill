@@ -1,5 +1,6 @@
 import 'dart:io' as io;
 
+import 'package:cross_file/cross_file.dart';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart' show experimental;
 
@@ -48,6 +49,19 @@ class DefaultClipboardService extends ClipboardService {
       return null;
     }
     return QuillNativeProvider.instance.getClipboardGif();
+  }
+
+  @override
+  Future<List<XFile>> getFiles() async {
+    final native = QuillNativeProvider.instance;
+    if (await native.isSupported(QuillNativeBridgeFeature.getClipboardFiles)) {
+      final paths = await native.getClipboardFiles();
+      if (paths.isNotEmpty) {
+        return paths.map(XFile.new).toList();
+      }
+    }
+    final image = await getImageFile();
+    return image == null ? [] : [XFile.fromData(image, mimeType: 'image/png')];
   }
 
   Future<String?> _getClipboardFile({required String fileExtension}) async {

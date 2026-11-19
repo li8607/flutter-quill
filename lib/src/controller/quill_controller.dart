@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/services.dart' show ClipboardData, Clipboard;
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
+import 'package:mime/mime.dart';
 
 import '../../quill_delta.dart';
 import '../common/structs/image_url.dart';
@@ -597,7 +598,7 @@ class QuillController extends ChangeNotifier {
       return true;
     }
 
-    if (clipboardConfig?.enableExternalRichPaste ?? false) {
+    if (clipboardConfig?.enableExternalRichPaste ?? true) {
       final pasteHtmlSuccess = await pasteHTML();
       if (pasteHtmlSuccess) {
         updateEditor?.call();
@@ -612,6 +613,26 @@ class QuillController extends ChangeNotifier {
     }
 
     final clipboardService = ClipboardServiceProvider.instance;
+
+    final onFilePaste = clipboardConfig?.onFilePaste;
+    if (onFilePaste != null) {
+      final files = await clipboardService.getFiles();
+      if (files.isNotEmpty) {
+        for (final file in files) {
+          final path = await onFilePaste(file);
+          if (path != null) {
+            replaceText(
+              plainTextEditingValue.selection.end,
+              0,
+              path.toBlockEmbed(),
+              null,
+            );
+          }
+        }
+        updateEditor?.call();
+        return true;
+      }
+    }
 
     final onImagePaste = clipboardConfig?.onImagePaste;
     if (onImagePaste != null) {
@@ -767,5 +788,19 @@ class QuillController extends ChangeNotifier {
       sb.write(text[i]);
     }
     return sb.toString();
+  }
+}
+
+/// Converts a saved attachment path to its corresponding Quill embed.
+extension AttachmentPath on String {
+  /// Preserves the document format used for media and generic attachments.
+  BlockEmbed toBlockEmbed() {
+    final mediaType = lookupMimeType(this)?.split('/').first;
+    return switch (mediaType) {
+      'image' => BlockEmbed.image(this),
+      'video' => BlockEmbed.video(this),
+      'audio' => BlockEmbed('audio', this),
+      _ => BlockEmbed.custom(CustomBlockEmbed(BlockEmbed.customType, this)),
+    };
   }
 }
