@@ -53,28 +53,28 @@ class DefaultClipboardService extends ClipboardService {
 
   @override
   Future<List<XFile>> getFiles() async {
-    final native = QuillNativeProvider.instance;
-    if (await native.isSupported(QuillNativeBridgeFeature.getClipboardFiles)) {
-      final paths = await native.getClipboardFiles();
-      if (paths.isNotEmpty) {
-        return paths.map(XFile.new).toList();
-      }
+    final paths = await _getClipboardFilePaths();
+    if (paths.isNotEmpty) {
+      return paths.map(XFile.new).toList();
     }
     final image = await getImageFile();
     return image == null ? [] : [XFile.fromData(image, mimeType: 'image/png')];
   }
 
-  Future<String?> _getClipboardFile({required String fileExtension}) async {
-    if (!(await QuillNativeProvider.instance.isSupported(
-      QuillNativeBridgeFeature.getClipboardFiles,
-    ))) {
-      return null;
+  Future<List<String>> _getClipboardFilePaths() async {
+    final native = QuillNativeProvider.instance;
+    if (!await native.isSupported(QuillNativeBridgeFeature.getClipboardFiles)) {
+      return [];
     }
+    return native.getClipboardFiles();
+  }
+
+  Future<String?> _getClipboardFile({required String fileExtension}) async {
     if (kIsWeb) {
       // TODO: Can't read file with dart:io on the Web (See related https://github.com/FlutterQuill/quill-native-bridge/issues/6)
       return null;
     }
-    final filePaths = await QuillNativeProvider.instance.getClipboardFiles();
+    final filePaths = await _getClipboardFilePaths();
     final filePath = filePaths.firstWhere(
       (filePath) => filePath.endsWith('.$fileExtension'),
       orElse: () => '',

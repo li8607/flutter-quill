@@ -87,6 +87,9 @@ class QuillClipboardConfig {
   final Future<String?> Function(String plainText)? onPlainTextPaste;
 
   /// Saves a clipboard file and returns the path to embed, or null to skip it.
+  ///
+  /// Runs after internal images and external rich text, before image, GIF, and
+  /// plain-text fallbacks. A non-empty file list consumes the paste operation.
   @experimental
   final Future<String?> Function(XFile file)? onFilePaste;
 
