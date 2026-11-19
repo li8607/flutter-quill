@@ -72,8 +72,12 @@ class ResolveLineFormatRule extends FormatRule {
     return result;
   }
 
-  Delta _applyAttribute(String text, Operation op, Attribute attribute,
-      {bool firstOnly = false}) {
+  Delta _applyAttribute(
+    String text,
+    Operation op,
+    Attribute attribute, {
+    bool firstOnly = false,
+  }) {
     final result = Delta();
     var offset = 0;
     var lf = text.indexOf('\n');
@@ -97,17 +101,21 @@ class ResolveLineFormatRule extends FormatRule {
   }
 
   Iterable<MapEntry<String, dynamic>> _getRemovedBlocks(
-      Attribute<dynamic> attribute, Operation op) {
+    Attribute<dynamic> attribute,
+    Operation op,
+  ) {
     // Enforce Block Format exclusivity by rule
     if (!Attribute.exclusiveBlockKeys.contains(attribute.key)) {
       return <MapEntry<String, dynamic>>[];
     }
 
     return op.attributes?.keys
-            .where((key) =>
-                Attribute.exclusiveBlockKeys.contains(key) &&
-                attribute.key != key &&
-                attribute.value != null)
+            .where(
+              (key) =>
+                  Attribute.exclusiveBlockKeys.contains(key) &&
+                  attribute.key != key &&
+                  attribute.value != null,
+            )
             .map((key) => MapEntry<String, dynamic>(key, null)) ??
         [];
   }
@@ -133,13 +141,14 @@ class FormatLinkAtCaretPositionRule extends FormatRule {
     final delta = Delta();
     final itr = DeltaIterator(document.toDelta());
     final before = itr.skip(index), after = itr.next();
-    int? beg = index, retain = 0;
+    var beg = index;
+    var retain = 0;
     if (before != null && before.hasAttribute(attribute.key)) {
       beg -= before.length!;
-      retain = before.length;
+      retain = before.length!;
     }
     if (after.hasAttribute(attribute.key)) {
-      if (retain != null) retain += after.length!;
+      retain += after.length!;
     }
     if (retain == 0) {
       return null;
@@ -147,7 +156,7 @@ class FormatLinkAtCaretPositionRule extends FormatRule {
 
     delta
       ..retain(beg)
-      ..retain(retain!, attribute.toJson());
+      ..retain(retain, attribute.toJson());
     return delta;
   }
 }

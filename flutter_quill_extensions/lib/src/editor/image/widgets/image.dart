@@ -7,24 +7,16 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:photo_view/photo_view.dart';
 
 import '../../../common/utils/utils.dart';
+import '../config/image_config.dart';
 import '../image_embed_types.dart';
-import '../models/image_configurations.dart';
-
-const List<String> imageFileExtensions = [
-  '.jpeg',
-  '.png',
-  '.jpg',
-  '.gif',
-  '.webp',
-  '.tif',
-  '.heic'
-];
 
 String getImageStyleString(QuillController controller) {
   final String? s = controller
       .getAllSelectionStyles()
-      .firstWhere((s) => s.attributes.containsKey(Attribute.style.key),
-          orElse: Style.new)
+      .firstWhere(
+        (s) => s.attributes.containsKey(Attribute.style.key),
+        orElse: Style.new,
+      )
       .attributes[Attribute.style.key]
       ?.value;
   return s ?? '';
@@ -36,23 +28,21 @@ String getImageStyleString(QuillController controller) {
 ImageProvider getImageProviderByImageSource(
   String imageSource, {
   required ImageEmbedBuilderProviderBuilder? imageProviderBuilder,
-  required String assetsPrefix,
   required BuildContext context,
 }) {
   if (imageProviderBuilder != null) {
-    return imageProviderBuilder(context, imageSource);
+    final imageProvider = imageProviderBuilder(context, imageSource);
+    if (imageProvider != null) {
+      return imageProvider;
+    }
   }
 
   if (isImageBase64(imageSource)) {
     return MemoryImage(base64.decode(imageSource));
   }
 
-  if (isHttpBasedUrl(imageSource)) {
+  if (isHttpUrl(imageSource)) {
     return NetworkImage(imageSource);
-  }
-
-  if (imageSource.startsWith(assetsPrefix)) {
-    return AssetImage(imageSource);
   }
 
   // File image
@@ -67,7 +57,6 @@ Image getImageWidgetByImageSource(
   required BuildContext context,
   required ImageEmbedBuilderProviderBuilder? imageProviderBuilder,
   required ImageErrorWidgetBuilder? imageErrorWidgetBuilder,
-  required String assetsPrefix,
   double? width,
   double? height,
   AlignmentGeometry alignment = Alignment.center,
@@ -77,7 +66,6 @@ Image getImageWidgetByImageSource(
       context: context,
       imageSource,
       imageProviderBuilder: imageProviderBuilder,
-      assetsPrefix: assetsPrefix,
     ),
     width: width,
     height: height,
@@ -93,6 +81,16 @@ String standardizeImageUrl(String url) {
   return url;
 }
 
+const List<String> _imageFileExtensions = [
+  '.jpeg',
+  '.png',
+  '.jpg',
+  '.gif',
+  '.webp',
+  '.tif',
+  '.heic',
+];
+
 /// This is a bug of Gallery Saver Package.
 /// It can not save image that's filename does not end with it's file extension
 /// like below.
@@ -100,14 +98,18 @@ String standardizeImageUrl(String url) {
 /// If imageUrl does not end with it's file extension,
 /// file extension is added to image url for saving.
 String appendFileExtensionToImageUrl(String url) {
-  final endsWithImageFileExtension = imageFileExtensions
-      .firstWhere((s) => url.toLowerCase().endsWith(s), orElse: () => '');
+  final endsWithImageFileExtension = _imageFileExtensions.firstWhere(
+    (s) => url.toLowerCase().endsWith(s),
+    orElse: () => '',
+  );
   if (endsWithImageFileExtension.isNotEmpty) {
     return url;
   }
 
-  final imageFileExtension = imageFileExtensions
-      .firstWhere((s) => url.toLowerCase().contains(s), orElse: () => '');
+  final imageFileExtension = _imageFileExtensions.firstWhere(
+    (s) => url.toLowerCase().contains(s),
+    orElse: () => '',
+  );
 
   return url + imageFileExtension;
 }
@@ -115,14 +117,12 @@ String appendFileExtensionToImageUrl(String url) {
 class ImageTapWrapper extends StatelessWidget {
   const ImageTapWrapper({
     required this.imageUrl,
-    required this.configurations,
-    required this.assetsPrefix,
+    required this.config,
     super.key,
   });
 
   final String imageUrl;
-  final QuillEditorImageEmbedConfigurations configurations;
-  final String assetsPrefix;
+  final QuillEditorImageEmbedConfig config;
 
   @override
   Widget build(BuildContext context) {
@@ -137,16 +137,13 @@ class ImageTapWrapper extends StatelessWidget {
               imageProvider: getImageProviderByImageSource(
                 context: context,
                 imageUrl,
-                imageProviderBuilder: configurations.imageProviderBuilder,
-                assetsPrefix: assetsPrefix,
+                imageProviderBuilder: config.imageProviderBuilder,
               ),
-              errorBuilder: configurations.imageErrorWidgetBuilder,
+              errorBuilder: config.imageErrorWidgetBuilder,
               loadingBuilder: (context, event) {
                 return Container(
                   color: Colors.black,
-                  child: const Center(
-                    child: CircularProgressIndicator(),
-                  ),
+                  child: const Center(child: CircularProgressIndicator()),
                 );
               },
             ),
@@ -180,7 +177,7 @@ class ImageTapWrapper extends StatelessWidget {
                         color: Colors.grey[400],
                         size: 28,
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),

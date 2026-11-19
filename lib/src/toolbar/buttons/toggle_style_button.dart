@@ -5,26 +5,30 @@ import '../../document/attribute.dart';
 import '../../document/style.dart';
 import '../../l10n/extensions/localizations_ext.dart';
 import '../base_button/base_value_button.dart';
-import '../base_toolbar.dart';
-import '../simple_toolbar_provider.dart';
+import '../simple_toolbar.dart';
 import '../theme/quill_icon_theme.dart';
 
-typedef ToggleStyleButtonBuilder = Widget Function(
-  BuildContext context,
-  Attribute attribute,
-  IconData icon,
-  bool? isToggled,
-  VoidCallback? onPressed,
-  VoidCallback? afterPressed, [
-  double iconSize,
-  QuillIconTheme? iconTheme,
-]);
+typedef ToggleStyleButtonBuilder =
+    Widget Function(
+      BuildContext context,
+      Attribute attribute,
+      IconData icon,
+      bool? isToggled,
+      VoidCallback? onPressed,
+      VoidCallback? afterPressed, [
+      double iconSize,
+      QuillIconTheme? iconTheme,
+    ]);
 
 class QuillToolbarToggleStyleButton extends QuillToolbarToggleStyleBaseButton {
   const QuillToolbarToggleStyleButton({
     required super.controller,
     required this.attribute,
     super.options = const QuillToolbarToggleStyleButtonOptions(),
+
+    /// Shares common options between all buttons, prefer the [options]
+    /// over the [baseOptions].
+    super.baseOptions,
     super.key,
   });
 
@@ -36,8 +40,8 @@ class QuillToolbarToggleStyleButton extends QuillToolbarToggleStyleBaseButton {
 }
 
 class QuillToolbarToggleStyleButtonState
-    extends QuillToolbarToggleStyleBaseButtonState<
-        QuillToolbarToggleStyleButton> {
+    extends
+        QuillToolbarToggleStyleBaseButtonState<QuillToolbarToggleStyleButton> {
   Style get _selectionStyle => controller.getSelectionStyle();
 
   @override
@@ -103,8 +107,7 @@ class QuillToolbarToggleStyleButtonState
 
   @override
   Widget build(BuildContext context) {
-    final childBuilder = options.childBuilder ??
-        context.quillToolbarBaseButtonOptions?.childBuilder;
+    final childBuilder = this.childBuilder;
     if (childBuilder != null) {
       return childBuilder(
         options,
@@ -170,10 +173,7 @@ Widget defaultToggleStyleButtonBuilder(
 ]) {
   final isEnabled = onPressed != null;
   return QuillToolbarIconButton(
-    icon: Icon(
-      icon,
-      size: iconSize * iconButtonFactor,
-    ),
+    icon: Icon(icon, size: iconSize * iconButtonFactor),
     isSelected: isEnabled ? isToggled == true : false,
     onPressed: onPressed,
     afterPressed: afterPressed,

@@ -5,14 +5,22 @@ import '../../document/attribute.dart';
 import '../../document/style.dart';
 import '../../l10n/extensions/localizations_ext.dart';
 import '../base_button/base_value_button.dart';
-import '../base_toolbar.dart';
+import '../config/buttons/toggle_check_list_options.dart';
+import 'toggle_style_button.dart';
 
-class QuillToolbarToggleCheckListButton extends QuillToolbarBaseButton<
-    QuillToolbarToggleCheckListButtonOptions,
-    QuillToolbarToggleCheckListButtonExtraOptions> {
+class QuillToolbarToggleCheckListButton
+    extends
+        QuillToolbarBaseButton<
+          QuillToolbarToggleCheckListButtonOptions,
+          QuillToolbarToggleCheckListButtonExtraOptions
+        > {
   const QuillToolbarToggleCheckListButton({
     required super.controller,
     super.options = const QuillToolbarToggleCheckListButtonOptions(),
+
+    /// Shares common options between all buttons, prefer the [options]
+    /// over the [baseOptions].
+    super.baseOptions,
     super.key,
   });
 
@@ -22,26 +30,20 @@ class QuillToolbarToggleCheckListButton extends QuillToolbarBaseButton<
 }
 
 class QuillToolbarToggleCheckListButtonState
-    extends QuillToolbarBaseButtonState<
-        QuillToolbarToggleCheckListButton,
-        QuillToolbarToggleCheckListButtonOptions,
-        QuillToolbarToggleCheckListButtonExtraOptions,
-        bool> {
+    extends
+        QuillToolbarBaseButtonState<
+          QuillToolbarToggleCheckListButton,
+          QuillToolbarToggleCheckListButtonOptions,
+          QuillToolbarToggleCheckListButtonExtraOptions,
+          bool
+        > {
   Style get _selectionStyle => controller.getSelectionStyle();
 
   @override
   bool get currentStateValue => _getIsToggled(_selectionStyle.attributes);
 
   bool _getIsToggled(Map<String, Attribute> attrs) {
-    var attribute = controller.toolbarButtonToggler[Attribute.list.key];
-
-    if (attribute == null) {
-      attribute = attrs[Attribute.list.key];
-    } else {
-      // checkbox tapping causes controller.selection to go to offset 0
-      controller.toolbarButtonToggler.remove(Attribute.list.key);
-    }
-
+    final attribute = attrs[Attribute.list.key];
     if (attribute == null) {
       return false;
     }
@@ -57,8 +59,7 @@ class QuillToolbarToggleCheckListButtonState
 
   @override
   Widget build(BuildContext context) {
-    final childBuilder =
-        options.childBuilder ?? baseButtonExtraOptions?.childBuilder;
+    final childBuilder = this.childBuilder;
     if (childBuilder != null) {
       return childBuilder(
         options,
@@ -91,7 +92,7 @@ class QuillToolbarToggleCheckListButtonState
 
   void _toggleAttribute() {
     controller
-      ..skipRequestKeyboard = !options.isShouldRequestKeyboard
+      ..skipRequestKeyboard = !options.shouldRequestKeyboard
       ..formatSelection(
         currentValue
             ? Attribute.clone(Attribute.unchecked, null)

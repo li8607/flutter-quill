@@ -26,7 +26,11 @@ mixin RawEditorStateSelectionDelegateMixin on EditorState
     }
 
     widget.controller.replaceTextWithEmbeds(
-        diff.start, diff.deleted.length, diff.inserted, value.selection);
+      diff.start,
+      diff.deleted.length,
+      diff.inserted,
+      value.selection,
+    );
   }
 
   @override
@@ -75,8 +79,10 @@ mixin RawEditorStateSelectionDelegateMixin on EditorState
 
     additionalOffset = expandedRect.height >= editableSize.height
         ? editableSize.height / 2 - expandedRect.center.dy
-        : 0.0
-            .clamp(expandedRect.bottom - editableSize.height, expandedRect.top);
+        : 0.0.clamp(
+            expandedRect.bottom - editableSize.height,
+            expandedRect.top,
+          );
     unitOffset = const Offset(0, 1);
 
     // No overscrolling when encountering tall fonts/scripts that extend past
@@ -91,9 +97,11 @@ mixin RawEditorStateSelectionDelegateMixin on EditorState
 
     final offsetDelta =
         (scrollController.hasClients ? scrollController.offset : 0) -
-            targetOffset;
+        targetOffset;
     return RevealedOffset(
-        rect: rect.shift(unitOffset * offsetDelta), offset: targetOffset);
+      rect: rect.shift(unitOffset * offsetDelta),
+      offset: targetOffset,
+    );
   }
 
   @override
@@ -106,23 +114,23 @@ mixin RawEditorStateSelectionDelegateMixin on EditorState
 
   @override
   void userUpdateTextEditingValue(
-      TextEditingValue value, SelectionChangedCause cause) {
+    TextEditingValue value,
+    SelectionChangedCause cause,
+  ) {
     textEditingValue = value;
   }
 
   @override
   bool get cutEnabled =>
-      widget.configurations.contextMenuBuilder != null &&
-      !widget.configurations.readOnly;
+      widget.config.contextMenuBuilder != null && !widget.config.readOnly;
 
   @override
-  bool get copyEnabled => widget.configurations.contextMenuBuilder != null;
+  bool get copyEnabled => widget.config.contextMenuBuilder != null;
 
   @override
   bool get pasteEnabled =>
-      widget.configurations.contextMenuBuilder != null &&
-      !widget.configurations.readOnly;
+      widget.config.contextMenuBuilder != null && !widget.config.readOnly;
 
   @override
-  bool get selectAllEnabled => widget.configurations.contextMenuBuilder != null;
+  bool get selectAllEnabled => widget.config.contextMenuBuilder != null;
 }

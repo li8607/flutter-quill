@@ -5,27 +5,33 @@ import '../../../document/attribute.dart';
 import '../../../document/style.dart';
 import '../../../l10n/extensions/localizations_ext.dart';
 import '../../base_button/base_value_button.dart';
-import '../../config/buttons/select_header_style_buttons_configurations.dart';
-import '../../provider.dart';
-import '../../simple_toolbar_provider.dart';
+import '../../config/buttons/select_header_style_buttons_options.dart';
 import '../quill_icon_button.dart';
 
-typedef QuillToolbarSelectHeaderStyleBaseButtons = QuillToolbarBaseButton<
-    QuillToolbarSelectHeaderStyleButtonsOptions,
-    QuillToolbarSelectHeaderStyleButtonsExtraOptions>;
+typedef QuillToolbarSelectHeaderStyleBaseButtons =
+    QuillToolbarBaseButton<
+      QuillToolbarSelectHeaderStyleButtonsOptions,
+      QuillToolbarSelectHeaderStyleButtonsExtraOptions
+    >;
 
 typedef QuillToolbarSelectHeaderStyleBaseButtonsState<
-        W extends QuillToolbarSelectHeaderStyleBaseButtons>
-    = QuillToolbarCommonButtonState<
-        W,
-        QuillToolbarSelectHeaderStyleButtonsOptions,
-        QuillToolbarSelectHeaderStyleButtonsExtraOptions>;
+  W extends QuillToolbarSelectHeaderStyleBaseButtons
+> =
+    QuillToolbarCommonButtonState<
+      W,
+      QuillToolbarSelectHeaderStyleButtonsOptions,
+      QuillToolbarSelectHeaderStyleButtonsExtraOptions
+    >;
 
 class QuillToolbarSelectHeaderStyleButtons
     extends QuillToolbarSelectHeaderStyleBaseButtons {
   const QuillToolbarSelectHeaderStyleButtons({
     required super.controller,
     super.options = const QuillToolbarSelectHeaderStyleButtonsOptions(),
+
+    /// Shares common options between all buttons, prefer the [options]
+    /// over the [baseOptions].
+    super.baseOptions,
     super.key,
   });
 
@@ -63,35 +69,26 @@ class QuillToolbarSelectHeaderStyleButtonsState
   }
 
   Axis get axis {
-    return options.axis ??
-        context.quillSimpleToolbarConfigurations?.axis ??
-        context.quillToolbarConfigurations?.axis ??
-        Axis.horizontal;
+    return options.axis ?? Axis.horizontal;
   }
 
   void _sharedOnPressed(Attribute attribute) {
-    final attribute0 =
-        _selectedAttribute == attribute ? Attribute.header : attribute;
+    final attribute0 = _selectedAttribute == attribute
+        ? Attribute.header
+        : attribute;
     controller.formatSelection(attribute0);
     afterButtonPressed?.call();
   }
 
   List<Attribute> get _attributes {
     return options.attributes ??
-        const [
-          Attribute.header,
-          Attribute.h1,
-          Attribute.h2,
-          Attribute.h3,
-        ];
+        const [Attribute.header, Attribute.h1, Attribute.h2, Attribute.h3];
   }
 
   @override
   Widget build(BuildContext context) {
     assert(
-      _attributes.every(
-        (element) => _valueToText.keys.contains(element),
-      ),
+      _attributes.every((element) => _valueToText.keys.contains(element)),
       'All attributes must be one of them: header, h1, h2 or h3',
     );
 
@@ -100,8 +97,7 @@ class QuillToolbarSelectHeaderStyleButtonsState
       fontSize: iconSize * 0.7,
     );
 
-    final childBuilder =
-        options.childBuilder ?? baseButtonExtraOptions?.childBuilder;
+    final childBuilder = this.childBuilder;
 
     final children = _attributes.map((attribute) {
       if (childBuilder != null) {
@@ -125,9 +121,7 @@ class QuillToolbarSelectHeaderStyleButtonsState
           onPressed: () => _sharedOnPressed(attribute),
           icon: Text(
             _valueToText[attribute] ??
-                (throw ArgumentError.notNull(
-                  'attribute',
-                )),
+                (throw ArgumentError.notNull('attribute')),
             style: style.copyWith(
               color: isSelected
                   ? iconTheme?.iconButtonSelectedData?.color
@@ -139,14 +133,8 @@ class QuillToolbarSelectHeaderStyleButtonsState
     }).toList();
 
     return axis == Axis.horizontal
-        ? Row(
-            mainAxisSize: MainAxisSize.min,
-            children: children,
-          )
-        : Column(
-            mainAxisSize: MainAxisSize.min,
-            children: children,
-          );
+        ? Row(mainAxisSize: MainAxisSize.min, children: children)
+        : Column(mainAxisSize: MainAxisSize.min, children: children);
   }
 
   void _didChangeEditingValue() {
@@ -156,18 +144,13 @@ class QuillToolbarSelectHeaderStyleButtonsState
   }
 
   Attribute<dynamic> _getHeaderValue() {
-    final attr = controller.toolbarButtonToggler[Attribute.header.key];
-    if (attr != null) {
-      // checkbox tapping causes controller.selection to go to offset 0
-      controller.toolbarButtonToggler.remove(Attribute.header.key);
-      return attr;
-    }
     return _selectionStyle.attributes[Attribute.header.key] ?? Attribute.header;
   }
 
   @override
   void didUpdateWidget(
-      covariant QuillToolbarSelectHeaderStyleButtons oldWidget) {
+    covariant QuillToolbarSelectHeaderStyleButtons oldWidget,
+  ) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.controller != controller) {
       oldWidget.controller.removeListener(_didChangeEditingValue);

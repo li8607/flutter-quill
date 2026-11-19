@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart'
+    as color_picker
     show ColorPicker, MaterialPicker, colorToHex;
 
-import '../../../../translations.dart';
 import '../../../document/style.dart';
-import 'color_button.dart' show hexToColor;
+import '../../../editor_toolbar_shared/color.dart';
+import '../../../l10n/extensions/localizations_ext.dart';
 
-enum _PickerType {
-  material,
-  color,
-}
+enum _PickerType { material, color }
 
 class ColorPickerDialog extends StatefulWidget {
   const ColorPickerDialog({
@@ -39,12 +37,14 @@ class ColorPickerDialogState extends State<ColorPickerDialog> {
   @override
   void initState() {
     super.initState();
-    hexController = TextEditingController(text: colorToHex(selectedColor));
     if (widget.isToggledColor) {
       selectedColor = widget.isBackground
           ? hexToColor(widget.selectionStyle.attributes['background']?.value)
           : hexToColor(widget.selectionStyle.attributes['color']?.value);
     }
+    hexController = TextEditingController(
+      text: color_picker.colorToHex(selectedColor),
+    );
   }
 
   @override
@@ -53,11 +53,12 @@ class ColorPickerDialogState extends State<ColorPickerDialog> {
       title: Text(context.loc.selectColor),
       actions: [
         TextButton(
-            onPressed: () {
-              widget.onRequestChangeColor(context, selectedColor);
-              Navigator.of(context).pop();
-            },
-            child: Text(context.loc.ok)),
+          onPressed: () {
+            widget.onRequestChangeColor(context, selectedColor);
+            Navigator.of(context).pop();
+          },
+          child: Text(context.loc.ok),
+        ),
       ],
       backgroundColor: Theme.of(context).canvasColor,
       content: SingleChildScrollView(
@@ -95,7 +96,7 @@ class ColorPickerDialogState extends State<ColorPickerDialog> {
             Column(
               children: [
                 if (pickerType == _PickerType.material)
-                  MaterialPicker(
+                  color_picker.MaterialPicker(
                     pickerColor: selectedColor,
                     onColorChanged: (color) {
                       widget.onRequestChangeColor(context, color);
@@ -103,7 +104,7 @@ class ColorPickerDialogState extends State<ColorPickerDialog> {
                     },
                   ),
                 if (pickerType == _PickerType.color)
-                  ColorPicker(
+                  color_picker.ColorPicker(
                     pickerColor: selectedColor,
                     onColorChanged: (color) {
                       widget.onRequestChangeColor(context, color);
@@ -112,9 +113,7 @@ class ColorPickerDialogState extends State<ColorPickerDialog> {
                       colorBoxSetState(() {});
                     },
                   ),
-                const SizedBox(
-                  height: 10,
-                ),
+                const SizedBox(height: 10),
                 Row(
                   children: [
                     SizedBox(
@@ -132,9 +131,7 @@ class ColorPickerDialogState extends State<ColorPickerDialog> {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      width: 10,
-                    ),
+                    const SizedBox(width: 10),
                     StatefulBuilder(
                       builder: (context, mcolorBoxSetState) {
                         colorBoxSetState = mcolorBoxSetState;
@@ -142,9 +139,7 @@ class ColorPickerDialogState extends State<ColorPickerDialog> {
                           width: 25,
                           height: 25,
                           decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.black45,
-                            ),
+                            border: Border.all(color: Colors.black45),
                             color: selectedColor,
                             borderRadius: BorderRadius.circular(5),
                           ),
@@ -154,7 +149,7 @@ class ColorPickerDialogState extends State<ColorPickerDialog> {
                   ],
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),

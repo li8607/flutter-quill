@@ -2,14 +2,23 @@ import 'package:flutter/material.dart';
 
 import '../../../controller/quill_controller.dart';
 import '../../../document/attribute.dart';
-import '../../base_toolbar.dart';
+import '../../config/simple_toolbar_button_options.dart';
+import '../toggle_style_button.dart';
 
 class QuillToolbarSelectAlignmentButtons extends StatelessWidget {
   const QuillToolbarSelectAlignmentButtons({
     required this.controller,
     this.options = const QuillToolbarSelectAlignmentButtonOptions(),
+
+    /// Shares common options between all buttons, prefer the [options]
+    /// over the [baseOptions].
+    this.baseOptions,
     super.key,
   });
+
+  final QuillToolbarBaseButtonOptions? baseOptions;
+
+  // TODO: This button doesn't support the base button option
 
   final QuillController controller;
   final QuillToolbarSelectAlignmentButtonOptions options;
@@ -29,18 +38,21 @@ class QuillToolbarSelectAlignmentButtons extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: _attrbuites
-          .map((e) => QuillToolbarToggleStyleButton(
-                controller: controller,
-                attribute: e,
-                options: QuillToolbarToggleStyleButtonOptions(
-                  iconData: options.iconData,
-                  iconSize: options.iconSize,
-                  iconButtonFactor: options.iconButtonFactor,
-                  afterButtonPressed: options.afterButtonPressed,
-                  iconTheme: options.iconTheme,
-                  tooltip: options.tooltip,
-                ),
-              ))
+          .map(
+            (e) => QuillToolbarToggleStyleButton(
+              baseOptions: baseOptions,
+              controller: controller,
+              attribute: e,
+              options: QuillToolbarToggleStyleButtonOptions(
+                iconData: options.iconData,
+                iconSize: options.iconSize,
+                iconButtonFactor: options.iconButtonFactor,
+                afterButtonPressed: options.afterButtonPressed,
+                iconTheme: options.iconTheme,
+                tooltip: options.tooltip,
+              ),
+            ),
+          )
           .toList(),
     );
   }

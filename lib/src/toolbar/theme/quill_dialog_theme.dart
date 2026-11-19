@@ -1,13 +1,5 @@
 import 'package:flutter/foundation.dart' show Diagnosticable, immutable;
-import 'package:flutter/material.dart'
-    show
-        BoxConstraints,
-        ButtonStyle,
-        Color,
-        EdgeInsets,
-        EdgeInsetsGeometry,
-        ShapeBorder,
-        TextStyle;
+import 'package:flutter/material.dart';
 
 /// Used to configure the dialog's look and feel.
 
@@ -129,17 +121,17 @@ class QuillDialogTheme with Diagnosticable {
 
   @override
   int get hashCode => Object.hash(
-        buttonTextStyle,
-        labelTextStyle,
-        inputTextStyle,
-        dialogBackgroundColor,
-        shape,
-        buttonStyle,
-        linkDialogConstraints,
-        linkDialogPadding,
-        mediaSelectorDialogConstraints,
-        mediaSelectorDialogPadding,
-        isWrappable,
-        runSpacing,
-      );
+    buttonTextStyle,
+    labelTextStyle,
+    inputTextStyle,
+    dialogBackgroundColor,
+    shape,
+    buttonStyle,
+    linkDialogConstraints,
+    linkDialogPadding,
+    mediaSelectorDialogConstraints,
+    mediaSelectorDialogPadding,
+    isWrappable,
+    runSpacing,
+  );
 }

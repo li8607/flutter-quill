@@ -3,20 +3,25 @@ import 'package:flutter/material.dart';
 import '../../../common/utils/color.dart';
 import '../../../document/attribute.dart';
 import '../../../document/style.dart';
-import '../../../editor_toolbar_shared/quill_configurations_ext.dart';
+import '../../../editor_toolbar_shared/color.dart';
 import '../../../l10n/extensions/localizations_ext.dart';
-import '../../../l10n/widgets/localizations.dart';
 import '../../base_button/base_value_button.dart';
-import '../../config/buttons/color_configurations.dart';
+import '../../config/buttons/color_options.dart';
 import '../quill_icon_button.dart';
 import 'color_dialog.dart';
 
-typedef QuillToolbarColorBaseButton = QuillToolbarBaseButton<
-    QuillToolbarColorButtonOptions, QuillToolbarColorButtonExtraOptions>;
+typedef QuillToolbarColorBaseButton =
+    QuillToolbarBaseButton<
+      QuillToolbarColorButtonOptions,
+      QuillToolbarColorButtonExtraOptions
+    >;
 
-typedef QuillToolbarColorBaseButtonState<W extends QuillToolbarColorButton>
-    = QuillToolbarCommonButtonState<W, QuillToolbarColorButtonOptions,
-        QuillToolbarColorButtonExtraOptions>;
+typedef QuillToolbarColorBaseButtonState<W extends QuillToolbarColorButton> =
+    QuillToolbarCommonButtonState<
+      W,
+      QuillToolbarColorButtonOptions,
+      QuillToolbarColorButtonExtraOptions
+    >;
 
 /// Controls color styles.
 ///
@@ -27,6 +32,10 @@ class QuillToolbarColorButton extends QuillToolbarColorBaseButton {
     required super.controller,
     required this.isBackground,
     super.options = const QuillToolbarColorButtonOptions(),
+
+    /// Shares common options between all buttons, prefer the [options]
+    /// over the [baseOptions].
+    super.baseOptions,
     super.key,
   });
 
@@ -51,13 +60,17 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
 
   void _didChangeEditingValue() {
     setState(() {
-      _isToggledColor =
-          _getIsToggledColor(widget.controller.getSelectionStyle().attributes);
+      _isToggledColor = _getIsToggledColor(
+        widget.controller.getSelectionStyle().attributes,
+      );
       _isToggledBackground = _getIsToggledBackground(
-          widget.controller.getSelectionStyle().attributes);
-      _isWhite = _isToggledColor &&
+        widget.controller.getSelectionStyle().attributes,
+      );
+      _isWhite =
+          _isToggledColor &&
           _selectionStyle.attributes['color']!.value == '#ffffff';
-      _isWhiteBackground = _isToggledBackground &&
+      _isWhiteBackground =
+          _isToggledBackground &&
           _selectionStyle.attributes['background']!.value == '#ffffff';
     });
   }
@@ -67,9 +80,11 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
     super.initState();
     _isToggledColor = _getIsToggledColor(_selectionStyle.attributes);
     _isToggledBackground = _getIsToggledBackground(_selectionStyle.attributes);
-    _isWhite = _isToggledColor &&
+    _isWhite =
+        _isToggledColor &&
         _selectionStyle.attributes['color']!.value == '#ffffff';
-    _isWhiteBackground = _isToggledBackground &&
+    _isWhiteBackground =
+        _isToggledBackground &&
         _selectionStyle.attributes['background']!.value == '#ffffff';
     widget.controller.addListener(_didChangeEditingValue);
   }
@@ -89,11 +104,14 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
       oldWidget.controller.removeListener(_didChangeEditingValue);
       widget.controller.addListener(_didChangeEditingValue);
       _isToggledColor = _getIsToggledColor(_selectionStyle.attributes);
-      _isToggledBackground =
-          _getIsToggledBackground(_selectionStyle.attributes);
-      _isWhite = _isToggledColor &&
+      _isToggledBackground = _getIsToggledBackground(
+        _selectionStyle.attributes,
+      );
+      _isWhite =
+          _isToggledColor &&
           _selectionStyle.attributes['color']!.value == '#ffffff';
-      _isWhiteBackground = _isToggledBackground &&
+      _isWhiteBackground =
+          _isToggledBackground &&
           _selectionStyle.attributes['background']!.value == '#ffffff';
     }
   }
@@ -116,19 +134,18 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
 
     final iconColorBackground =
         _isToggledBackground && widget.isBackground && !_isWhiteBackground
-            ? stringToColor(_selectionStyle.attributes['background']!.value)
-            : null;
+        ? stringToColor(_selectionStyle.attributes['background']!.value)
+        : null;
 
     final fillColor = _isToggledColor && !widget.isBackground && _isWhite
         ? stringToColor('#ffffff')
         : null;
     final fillColorBackground =
         _isToggledBackground && widget.isBackground && _isWhiteBackground
-            ? stringToColor('#ffffff')
-            : null;
+        ? stringToColor('#ffffff')
+        : null;
 
-    final childBuilder =
-        options.childBuilder ?? baseButtonExtraOptions?.childBuilder;
+    final childBuilder = this.childBuilder;
     if (childBuilder != null) {
       return childBuilder(
         options,
@@ -185,38 +202,12 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
     }
     showDialog<String>(
       context: context,
-      barrierColor: options.dialogBarrierColor ??
-          context.quillSharedConfigurations?.dialogBarrierColor ??
-          Colors.black54,
-      builder: (_) => FlutterQuillLocalizationsWidget(
-        child: ColorPickerDialog(
-          isBackground: widget.isBackground,
-          onRequestChangeColor: _changeColor,
-          isToggledColor: _isToggledColor,
-          selectionStyle: _selectionStyle,
-        ),
+      builder: (_) => ColorPickerDialog(
+        isBackground: widget.isBackground,
+        onRequestChangeColor: _changeColor,
+        isToggledColor: _isToggledColor,
+        selectionStyle: _selectionStyle,
       ),
     );
   }
-}
-
-Color hexToColor(String? hexString) {
-  if (hexString == null) {
-    return Colors.black;
-  }
-  final hexRegex = RegExp(r'([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$');
-
-  hexString = hexString.replaceAll('#', '');
-  if (!hexRegex.hasMatch(hexString)) {
-    return Colors.black;
-  }
-
-  final buffer = StringBuffer();
-  if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
-  buffer.write(hexString);
-  return Color(int.tryParse(buffer.toString(), radix: 16) ?? 0xFF000000);
-}
-
-String colorToHex(Color color) {
-  return color.value.toRadixString(16).padLeft(8, '0').toUpperCase();
 }

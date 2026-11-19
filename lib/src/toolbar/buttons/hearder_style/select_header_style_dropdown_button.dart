@@ -1,28 +1,36 @@
 import 'package:flutter/material.dart';
 
-import '../../../../translations.dart';
 import '../../../document/attribute.dart';
+import '../../../l10n/extensions/localizations_ext.dart';
 import '../../base_button/base_value_button.dart';
-import '../../config/buttons/select_header_style_dropdown_button_configurations.dart';
-import '../../simple_toolbar_provider.dart';
+import '../../config/buttons/select_header_style_dropdown_button_options.dart';
+
 import '../quill_icon_button.dart';
 
-typedef QuillToolbarSelectHeaderStyleDropdownBaseButton
-    = QuillToolbarBaseButton<QuillToolbarSelectHeaderStyleDropdownButtonOptions,
-        QuillToolbarSelectHeaderStyleDropdownButtonExtraOptions>;
+typedef QuillToolbarSelectHeaderStyleDropdownBaseButton =
+    QuillToolbarBaseButton<
+      QuillToolbarSelectHeaderStyleDropdownButtonOptions,
+      QuillToolbarSelectHeaderStyleDropdownButtonExtraOptions
+    >;
 
 typedef QuillToolbarSelectHeaderStyleDropdownBaseButtonsState<
-        W extends QuillToolbarSelectHeaderStyleDropdownButton>
-    = QuillToolbarCommonButtonState<
-        W,
-        QuillToolbarSelectHeaderStyleDropdownButtonOptions,
-        QuillToolbarSelectHeaderStyleDropdownButtonExtraOptions>;
+  W extends QuillToolbarSelectHeaderStyleDropdownButton
+> =
+    QuillToolbarCommonButtonState<
+      W,
+      QuillToolbarSelectHeaderStyleDropdownButtonOptions,
+      QuillToolbarSelectHeaderStyleDropdownButtonExtraOptions
+    >;
 
 class QuillToolbarSelectHeaderStyleDropdownButton
     extends QuillToolbarSelectHeaderStyleDropdownBaseButton {
   const QuillToolbarSelectHeaderStyleDropdownButton({
     required super.controller,
     super.options = const QuillToolbarSelectHeaderStyleDropdownButtonOptions(),
+
+    /// Shares common options between all buttons, prefer the [options]
+    /// over the [baseOptions].
+    super.baseOptions,
     super.key,
   });
 
@@ -56,7 +64,8 @@ class _QuillToolbarSelectHeaderStyleDropdownButtonState
 
   @override
   void didUpdateWidget(
-      covariant QuillToolbarSelectHeaderStyleDropdownButton oldWidget) {
+    covariant QuillToolbarSelectHeaderStyleDropdownButton oldWidget,
+  ) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.controller == widget.controller) {
       return;
@@ -77,12 +86,6 @@ class _QuillToolbarSelectHeaderStyleDropdownButtonState
   }
 
   Attribute<dynamic> _getHeaderValue() {
-    final attr = widget.controller.toolbarButtonToggler[Attribute.header.key];
-    if (attr != null) {
-      // checkbox tapping causes controller.selection to go to offset 0
-      widget.controller.toolbarButtonToggler.remove(Attribute.header.key);
-      return attr;
-    }
     return widget.controller
             .getSelectionStyle()
             .attributes[Attribute.header.key] ??
@@ -106,12 +109,7 @@ class _QuillToolbarSelectHeaderStyleDropdownButtonState
 
   List<Attribute<int?>> get headerAttributes {
     return widget.options.attributes ??
-        [
-          Attribute.h1,
-          Attribute.h2,
-          Attribute.h3,
-          Attribute.header,
-        ];
+        [Attribute.h1, Attribute.h2, Attribute.h3, Attribute.header];
   }
 
   void _onPressed(Attribute<int?> e) {
@@ -121,9 +119,7 @@ class _QuillToolbarSelectHeaderStyleDropdownButtonState
 
   @override
   Widget build(BuildContext context) {
-    final baseButtonConfigurations = context.quillToolbarBaseButtonOptions;
-    final childBuilder =
-        widget.options.childBuilder ?? baseButtonConfigurations?.childBuilder;
+    final childBuilder = this.childBuilder;
     if (childBuilder != null) {
       return childBuilder(
         widget.options,
@@ -159,15 +155,11 @@ class _QuillToolbarSelectHeaderStyleDropdownButtonState
             children: [
               Text(
                 _label(_selectedItem),
-                style: widget.options.textStyle ??
-                    TextStyle(
-                      fontSize: iconSize / 1.15,
-                    ),
+                style:
+                    widget.options.textStyle ??
+                    TextStyle(fontSize: iconSize / 1.15),
               ),
-              Icon(
-                Icons.arrow_drop_down,
-                size: iconSize * iconButtonFactor,
-              ),
+              Icon(Icons.arrow_drop_down, size: iconSize * iconButtonFactor),
             ],
           );
           if (!isMaterial3) {

@@ -5,9 +5,11 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'quill_localizations_am.dart';
 import 'quill_localizations_ar.dart';
 import 'quill_localizations_bg.dart';
 import 'quill_localizations_bn.dart';
+import 'quill_localizations_bs.dart';
 import 'quill_localizations_ca.dart';
 import 'quill_localizations_cs.dart';
 import 'quill_localizations_da.dart';
@@ -16,15 +18,21 @@ import 'quill_localizations_el.dart';
 import 'quill_localizations_en.dart';
 import 'quill_localizations_es.dart';
 import 'quill_localizations_fa.dart';
+import 'quill_localizations_fi.dart';
 import 'quill_localizations_fr.dart';
+import 'quill_localizations_gu.dart';
 import 'quill_localizations_he.dart';
 import 'quill_localizations_hi.dart';
+import 'quill_localizations_hr.dart';
 import 'quill_localizations_hu.dart';
 import 'quill_localizations_id.dart';
 import 'quill_localizations_it.dart';
 import 'quill_localizations_ja.dart';
+import 'quill_localizations_km.dart';
 import 'quill_localizations_ko.dart';
 import 'quill_localizations_ku.dart';
+import 'quill_localizations_mk.dart';
+import 'quill_localizations_mn.dart';
 import 'quill_localizations_ms.dart';
 import 'quill_localizations_ne.dart';
 import 'quill_localizations_nl.dart';
@@ -100,13 +108,15 @@ import 'quill_localizations_zh.dart';
 /// property.
 abstract class FlutterQuillLocalizations {
   FlutterQuillLocalizations(String locale)
-      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
   static FlutterQuillLocalizations? of(BuildContext context) {
     return Localizations.of<FlutterQuillLocalizations>(
-        context, FlutterQuillLocalizations);
+      context,
+      FlutterQuillLocalizations,
+    );
   }
 
   static const LocalizationsDelegate<FlutterQuillLocalizations> delegate =
@@ -124,17 +134,19 @@ abstract class FlutterQuillLocalizations {
   /// of delegates is preferred or required.
   static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
       <LocalizationsDelegate<dynamic>>[
-    delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ];
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
+    Locale('am'),
     Locale('ar'),
     Locale('bg'),
     Locale('bn'),
+    Locale('bs'),
     Locale('ca'),
     Locale('cs'),
     Locale('da'),
@@ -144,16 +156,22 @@ abstract class FlutterQuillLocalizations {
     Locale('en', 'US'),
     Locale('es'),
     Locale('fa'),
+    Locale('fi'),
     Locale('fr'),
+    Locale('gu'),
     Locale('he'),
     Locale('hi'),
+    Locale('hr'),
     Locale('hu'),
     Locale('id'),
     Locale('it'),
     Locale('ja'),
+    Locale('km'),
     Locale('ko'),
     Locale('ku'),
     Locale('ku', 'CKB'),
+    Locale('mk'),
+    Locale('mn'),
     Locale('ms'),
     Locale('ne'),
     Locale('nl'),
@@ -176,7 +194,8 @@ abstract class FlutterQuillLocalizations {
     Locale('vi'),
     Locale('zh'),
     Locale('zh', 'CN'),
-    Locale('zh', 'HK')
+    Locale('zh', 'HK'),
+    Locale('zh', 'TW'),
   ];
 
   /// No description provided for @pasteLink.
@@ -760,6 +779,60 @@ abstract class FlutterQuillLocalizations {
   /// In en, this message translates to:
   /// **'Insert table'**
   String get insertTable;
+
+  /// No description provided for @insertVideo.
+  ///
+  /// In en, this message translates to:
+  /// **'Insert video'**
+  String get insertVideo;
+
+  /// A generic error message shown when an image cannot be saved due to an unknown issue
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected error occurred while saving the image. Please try again.'**
+  String get errorUnexpectedSavingImage;
+
+  /// Message shown when an image is successfully saved to the system gallery
+  ///
+  /// In en, this message translates to:
+  /// **'Image saved to your gallery.'**
+  String get successImageSavedGallery;
+
+  /// Message shown on desktop when an image is successfully saved. The user is prompted to open the file location
+  ///
+  /// In en, this message translates to:
+  /// **'Image saved successfully.'**
+  String get successImageSaved;
+
+  /// Message shown on web when an image is successfully downloaded
+  ///
+  /// In en, this message translates to:
+  /// **'Image downloaded successfully.'**
+  String get successImageDownloaded;
+
+  /// Label for the button that opens the system gallery
+  ///
+  /// In en, this message translates to:
+  /// **'Open Gallery'**
+  String get openGallery;
+
+  /// Label for the button that opens the file explorer to the file's location
+  ///
+  /// In en, this message translates to:
+  /// **'Open File Location'**
+  String get openFileLocation;
+
+  /// Label for the button that opens the file
+  ///
+  /// In en, this message translates to:
+  /// **'Open File'**
+  String get openFile;
+
+  /// Message shown when the app is unable to save an image because a required permission was denied or skipped
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn’t save the image due to missing permission'**
+  String get saveImagePermissionDenied;
 }
 
 class _FlutterQuillLocalizationsDelegate
@@ -769,51 +842,60 @@ class _FlutterQuillLocalizationsDelegate
   @override
   Future<FlutterQuillLocalizations> load(Locale locale) {
     return SynchronousFuture<FlutterQuillLocalizations>(
-        lookupFlutterQuillLocalizations(locale));
+      lookupFlutterQuillLocalizations(locale),
+    );
   }
 
   @override
   bool isSupported(Locale locale) => <String>[
-        'ar',
-        'bg',
-        'bn',
-        'ca',
-        'cs',
-        'da',
-        'de',
-        'el',
-        'en',
-        'es',
-        'fa',
-        'fr',
-        'he',
-        'hi',
-        'hu',
-        'id',
-        'it',
-        'ja',
-        'ko',
-        'ku',
-        'ms',
-        'ne',
-        'nl',
-        'no',
-        'pl',
-        'pt',
-        'ro',
-        'ru',
-        'sk',
-        'sr',
-        'sv',
-        'sw',
-        'th',
-        'tk',
-        'tr',
-        'uk',
-        'ur',
-        'vi',
-        'zh'
-      ].contains(locale.languageCode);
+    'am',
+    'ar',
+    'bg',
+    'bn',
+    'bs',
+    'ca',
+    'cs',
+    'da',
+    'de',
+    'el',
+    'en',
+    'es',
+    'fa',
+    'fi',
+    'fr',
+    'gu',
+    'he',
+    'hi',
+    'hr',
+    'hu',
+    'id',
+    'it',
+    'ja',
+    'km',
+    'ko',
+    'ku',
+    'mk',
+    'mn',
+    'ms',
+    'ne',
+    'nl',
+    'no',
+    'pl',
+    'pt',
+    'ro',
+    'ru',
+    'sk',
+    'sr',
+    'sv',
+    'sw',
+    'th',
+    'tk',
+    'tr',
+    'uk',
+    'ur',
+    'vi',
+    'zh',
+  ].contains(locale.languageCode);
 
   @override
   bool shouldReload(_FlutterQuillLocalizationsDelegate old) => false;
@@ -861,6 +943,8 @@ FlutterQuillLocalizations lookupFlutterQuillLocalizations(Locale locale) {
             return FlutterQuillLocalizationsZhCn();
           case 'HK':
             return FlutterQuillLocalizationsZhHk();
+          case 'TW':
+            return FlutterQuillLocalizationsZhTw();
         }
         break;
       }
@@ -868,12 +952,16 @@ FlutterQuillLocalizations lookupFlutterQuillLocalizations(Locale locale) {
 
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'am':
+      return FlutterQuillLocalizationsAm();
     case 'ar':
       return FlutterQuillLocalizationsAr();
     case 'bg':
       return FlutterQuillLocalizationsBg();
     case 'bn':
       return FlutterQuillLocalizationsBn();
+    case 'bs':
+      return FlutterQuillLocalizationsBs();
     case 'ca':
       return FlutterQuillLocalizationsCa();
     case 'cs':
@@ -890,12 +978,18 @@ FlutterQuillLocalizations lookupFlutterQuillLocalizations(Locale locale) {
       return FlutterQuillLocalizationsEs();
     case 'fa':
       return FlutterQuillLocalizationsFa();
+    case 'fi':
+      return FlutterQuillLocalizationsFi();
     case 'fr':
       return FlutterQuillLocalizationsFr();
+    case 'gu':
+      return FlutterQuillLocalizationsGu();
     case 'he':
       return FlutterQuillLocalizationsHe();
     case 'hi':
       return FlutterQuillLocalizationsHi();
+    case 'hr':
+      return FlutterQuillLocalizationsHr();
     case 'hu':
       return FlutterQuillLocalizationsHu();
     case 'id':
@@ -904,10 +998,16 @@ FlutterQuillLocalizations lookupFlutterQuillLocalizations(Locale locale) {
       return FlutterQuillLocalizationsIt();
     case 'ja':
       return FlutterQuillLocalizationsJa();
+    case 'km':
+      return FlutterQuillLocalizationsKm();
     case 'ko':
       return FlutterQuillLocalizationsKo();
     case 'ku':
       return FlutterQuillLocalizationsKu();
+    case 'mk':
+      return FlutterQuillLocalizationsMk();
+    case 'mn':
+      return FlutterQuillLocalizationsMn();
     case 'ms':
       return FlutterQuillLocalizationsMs();
     case 'ne':
@@ -949,8 +1049,9 @@ FlutterQuillLocalizations lookupFlutterQuillLocalizations(Locale locale) {
   }
 
   throw FlutterError(
-      'FlutterQuillLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-      'an issue with the localizations generation tool. Please file an issue '
-      'on GitHub with a reproducible sample app and the gen-l10n configuration '
-      'that was used.');
+    'FlutterQuillLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.',
+  );
 }

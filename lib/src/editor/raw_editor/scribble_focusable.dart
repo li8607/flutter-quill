@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
+import '../../common/extensions/view_id_ext.dart';
+
 class ScribbleFocusable extends StatefulWidget {
   const ScribbleFocusable({
     required this.child,
@@ -28,7 +30,7 @@ class ScribbleFocusable extends StatefulWidget {
 class _ScribbleFocusableState extends State<ScribbleFocusable>
     implements ScribbleClient {
   _ScribbleFocusableState()
-      : _elementIdentifier = 'quill-scribble-${_nextElementIdentifier++}';
+    : _elementIdentifier = 'quill-scribble-${_nextElementIdentifier++}';
 
   @override
   void initState() {
@@ -87,13 +89,21 @@ class _ScribbleFocusableState extends State<ScribbleFocusable>
     if (!calculatedBounds.overlaps(rect)) {
       return false;
     }
+
+    final viewId = context.getViewId();
+    if (viewId == null) {
+      // Can't perform hit testing without a viewId
+      return false;
+    }
+
     final intersection = calculatedBounds.intersect(rect);
     final result = HitTestResult();
-    WidgetsBinding.instance
-        .hitTestInView(result, intersection.center, View.of(context).viewId);
-    return result.path.any((entry) =>
-        entry.target == _renderBoxForEditor ||
-        entry.target == _renderBoxForBounds);
+    WidgetsBinding.instance.hitTestInView(result, intersection.center, viewId);
+    return result.path.any(
+      (entry) =>
+          entry.target == _renderBoxForEditor ||
+          entry.target == _renderBoxForBounds,
+    );
   }
 
   @override
@@ -105,17 +115,18 @@ class _ScribbleFocusableState extends State<ScribbleFocusable>
     final transform = box.getTransformTo(null);
     final size = _renderBoxForBounds?.size ?? box.size;
     return MatrixUtils.transformRect(
-        transform,
-        Rect.fromLTWH(
-          0 + (widget.scribbleAreaInsets?.left ?? 0),
-          0 + (widget.scribbleAreaInsets?.top ?? 0),
-          size.width -
-              (widget.scribbleAreaInsets?.left ?? 0) -
-              (widget.scribbleAreaInsets?.right ?? 0),
-          size.height -
-              (widget.scribbleAreaInsets?.top ?? 0) -
-              (widget.scribbleAreaInsets?.bottom ?? 0),
-        ));
+      transform,
+      Rect.fromLTWH(
+        0 + (widget.scribbleAreaInsets?.left ?? 0),
+        0 + (widget.scribbleAreaInsets?.top ?? 0),
+        size.width -
+            (widget.scribbleAreaInsets?.left ?? 0) -
+            (widget.scribbleAreaInsets?.right ?? 0),
+        size.height -
+            (widget.scribbleAreaInsets?.top ?? 0) -
+            (widget.scribbleAreaInsets?.bottom ?? 0),
+      ),
+    );
   }
 
   @override

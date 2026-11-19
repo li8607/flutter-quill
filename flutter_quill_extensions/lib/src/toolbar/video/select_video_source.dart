@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill_internal.dart' show isDesktopApp;
-import 'package:flutter_quill/translations.dart';
+import 'package:flutter_quill/internal.dart';
 
-import 'models/video.dart';
+import 'config/video.dart';
 
 class SelectVideoSourceDialog extends StatelessWidget {
   const SelectVideoSourceDialog({super.key});
@@ -17,9 +16,7 @@ class SelectVideoSourceDialog extends StatelessWidget {
           children: [
             ListTile(
               title: Text(context.loc.gallery),
-              subtitle: Text(
-                context.loc.pickAVideoFromYourGallery,
-              ),
+              subtitle: Text(context.loc.pickAVideoFromYourGallery),
               leading: const Icon(Icons.photo_sharp),
               onTap: () => Navigator.of(context).pop(InsertVideoSource.gallery),
             ),
@@ -32,9 +29,7 @@ class SelectVideoSourceDialog extends StatelessWidget {
             ),
             ListTile(
               title: Text(context.loc.link),
-              subtitle: Text(
-                context.loc.pasteAVideoUsingALink,
-              ),
+              subtitle: Text(context.loc.pasteAVideoUsingALink),
               leading: const Icon(Icons.link),
               onTap: () => Navigator.of(context).pop(InsertVideoSource.link),
             ),
@@ -52,8 +47,7 @@ Future<InsertVideoSource?> showSelectVideoSourceDialog({
     showDragHandle: true,
     context: context,
     constraints: const BoxConstraints(maxWidth: 640),
-    builder: (context) =>
-        const FlutterQuillLocalizationsWidget(child: SelectVideoSourceDialog()),
+    builder: (context) => const SelectVideoSourceDialog(),
   );
   return imageSource;
 }

@@ -1,13 +1,13 @@
 # Flutter Quill Extensions
 
 An extension for [flutter_quill](https://pub.dev/packages/flutter_quill)
-to support embedding widgets images, formulas, and videos.
+to support embedding widgets images, and videos.
 
 ## 📚 Table of Contents
 
 - [📝 About](#-about)
 - [📦 Installation](#-installation)
-- [🛠 Platform Specific Configurations](#-platform-specific-configurations)
+- [🛠 Platform Setup](#-platform-setup)
 - [🚀 Usage](#-usage)
 - [⚙️ Configurations](#-configurations)
 - [🤝 Contributing](#-contributing)
@@ -25,9 +25,8 @@ Follow the usage instructions of [`flutter_quill`](https://github.com/singerdmx/
 
 Add the `flutter_quill_extensions` dependency to your project:
 
-```yaml
-dependencies:
-  flutter_quill_extensions: ^<latest-version-here>
+```shell
+flutter pub add flutter_quill_extensions
 ```
 
 <p align="center">OR</p>
@@ -41,20 +40,13 @@ dependencies:
       path: flutter_quill_extensions
 ```
 
-## 🛠 Platform Specific Configurations
+## 🛠 Platform Setup
 
 The package uses the following plugins:
 
-1. [`gal`](https://github.com/natsuk4ze/gal) to save images.
-   Ensure to follow the [Get Started](https://github.com/natsuk4ze/gal#-get-started) guide as it requires
-   platform-specific setup.
-2. [`image_picker`](https://pub.dev/packages/image_picker) for picking images.
-   See the [Installation](https://pub.dev/packages/image_picker#installation) section.
-3. [`super_clipboard`](https://pub.dev/packages/super_clipboard) which needs some setup on Android only, it's used to
-   support copying images and pasting them into editor, it's also required to support rich text pasting feature on
-   non-web platforms, Open the [Android Support](https://pub.dev/packages/super_clipboard#android-support) page for
-   instructions.
-   The `minSdkVersion` for **Android** is `23` as `super_clipboard` requires it
+1. [`quill_native_bridge`](https://pub.dev/packages/quill_native_bridge) to save images: [Setup](https://pub.dev/packages/quill_native_bridge#-setup)
+2. [`image_picker`](https://pub.dev/packages/image_picker) for picking images: [Setup](https://pub.dev/packages/image_picker#installation)
+3. [`video_player`](https://pub.dev/packages/video_player) for video playback: [Setup](https://pub.dev/packages/video_player#setup)
 
 ### Loading Images from the Internet
 
@@ -68,8 +60,7 @@ The package uses the following plugins:
 2. To restrict image and video loading to HTTPS only, configure your app accordingly.
    If you need to support HTTP, you must adjust your app settings for release mode. Consult
    the [Android Cleartext / Plaintext HTTP](https://developer.android.com/privacy-and-security/risks/cleartext-communications)
-   guide
-   for more information.
+   guide for more information.
 
 #### macOS
 
@@ -80,13 +71,13 @@ the [Flutter macOS Networking documentation](https://docs.flutter.dev/data-and-b
 ## 🚀 Usage
 
 Once you follow the [Installation](#-installation) section.
-Set the `embedBuilders` and `embedToolbar` params in configurations of `QuillEditor` and `QuillToolbar`.
+Set the `embedBuilders` and `embedToolbar` params in configurations of `QuillEditor` and `QuillSimpleToolbar`.
 
 **Quill Toolbar**:
 
 ```dart
-QuillToolbar.simple(
-  configurations: QuillSimpleToolbarConfigurations(
+QuillSimpleToolbar(
+  config: QuillSimpleToolbarConfig(
     embedButtons: FlutterQuillEmbeds.toolbarButtons(),
   ),
 ),
@@ -97,7 +88,7 @@ QuillToolbar.simple(
 ```dart
 Expanded(
   child: QuillEditor.basic(
-    configurations: QuillEditorConfigurations(
+    config: QuillEditorConfig(
       embedBuilders: kIsWeb ? FlutterQuillEmbeds.editorWebBuilders() : FlutterQuillEmbeds.editorBuilders(),
     ),
   ),
@@ -108,9 +99,10 @@ Expanded(
 
 ### 📦 Embed Blocks
 
-[Flutter_quill](https://pub.dev/packages/flutter_quill) provides an interface for all the users to provide their
+The [flutter_quill](https://pub.dev/packages/flutter_quill) provides an interface for all the users to provide their
 implementations for embed blocks.
-Implementations for image, video, and formula embed blocks are proved in this package.
+
+Implementations for image, video embed blocks are provided in this package.
 
 The instructions for using the embed blocks are in the [Usage](#-usage) section.
 
@@ -149,138 +141,25 @@ Define flutterAlignment` as follows:
 
 This works only for non-web platforms.
 
-### 📝 Rich Text Paste Feature
-
-The Rich Text Pasting feature requires native code to access
-the `Clipboard` data as HTML, the plugin `super_clipboard` is required on all platforms except Web.
-
-This package already includes `super_clipboard` and will be used internally in this package, to use it
-in `flutter_quill`, call this function before using any of the widgets or functionalities:
-
-```dart
-FlutterQuillExtensions.useSuperClipboardPlugin();
-```
-
-`super_clipboard` is a comprehensive plugin that provides many clipboard features for reading and writing rich text,
-images and other formats.
-
-Calling this function will allow `flutter_quill` to use modern rich text features to paste HTML and Markdown,
-support for GIF files, and other formats.
-
-> [!IMPORTANT]
-> On web platforms, you can only get the HTML from `Clipboard` on the
-> `paste` event, `super_clipboard`, or any plugin is not required.
-> The paste feature will not work using the standard paste hotkey logic.
-> As such, you will be unable to use the **Rich Text Paste Feature** on a button or in the web app itself.
-> So you might want to either display a dialog when pressing the paste button that explains the limitation and shows the
-> hotkey they need to press in order to paste or develop an extension for the browser that bypasses this limitation
-> similarly to **Google Docs** and provide a link to install the browser extension.
-> See [Issue #1998](https://github.com/singerdmx/flutter-quill/issues/1998) for more details.
-
-> [!NOTE]
-> We're still planning on how this should be implemented in
-> [Issue #1998](https://github.com/singerdmx/flutter-quill/issues/1998).
-
 ### 🖼️ Image Assets
 
-If you want to use image assets in the Quill Editor, you need to make sure your assets folder is `assets` otherwise:
+To support loading image assets in the editor:
 
 ```dart
-QuillEditor.basic(
-  configurations: const QuillEditorConfigurations(
-    // ...
-    sharedConfigurations: QuillSharedConfigurations(
-      extraConfigurations: {
-        QuillSharedExtensionsConfigurations.key:
-            QuillSharedExtensionsConfigurations(
-          assetsPrefix: 'your-assets-folder-name', // Defaults to `assets`
-        ),
+FlutterQuillEmbeds.editorBuilders(
+    imageEmbedConfig:
+        QuillEditorImageEmbedConfig(
+      imageProviderBuilder: (context, imageUrl) {
+        if (imageUrl.startsWith('assets/')) {
+          return AssetImage(imageUrl);
+        }
+        return null;
       },
-    ),
-  ),
-);
+    ),  
+)
 ```
 
-This info is necessary for the package to check if its asset image to use the `AssetImage` provider.
-
-### 🎯 Drag and drop feature
-
-Currently, the drag-and-drop feature is not officially supported, but you can achieve this very easily in the following
-steps:
-
-1. Drag and drop require native code, you can use any Flutter plugin you like, if you want a suggestion we
-   recommend [desktop_drop](https://pub.dev/packages/desktop_drop), it was originally developed for desktop.
-   It has support for the web as well as Android (that is not the case for iOS)
-2. Add the dependency in your `pubspec.yaml` using the following command:
-
-    ```yaml
-    flutter pub add desktop_drop
-    ```
-   and import it with
-    ```dart
-    import 'package:desktop_drop/desktop_drop.dart';
-    ```
-3. in the configurations of `QuillEditor`, use the `builder` to wrap the editor with `DropTarget` which comes
-   from `desktop_drop`
-
-    ```dart
-    import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
-    
-    QuillEditor.basic(
-          configurations: QuillEditorConfigurations(
-            padding: const EdgeInsets.all(16),
-             builder: (context, rawEditor) {
-                return DropTarget(
-                  onDragDone: _onDragDone,
-                  child: rawEditor,
-                );
-              },
-            embedBuilders: kIsWeb
-                ? FlutterQuillEmbeds.editorWebBuilders()
-                : FlutterQuillEmbeds.editorBuilders(),
-          ),
-    )
-    ```
-4. Implement the `_onDragDone`, it depends on your use case but this is just a simple example
-
-```dart
-const List<String> imageFileExtensions = [
-  '.jpeg',
-  '.png',
-  '.jpg',
-  '.gif',
-  '.webp',
-  '.tif',
-  '.heic'
-];
-OnDragDoneCallback get _onDragDone {
-    return (details) {
-      final scaffoldMessenger = ScaffoldMessenger.of(context);
-      final file = details.files.first;
-      final isSupported =
-          imageFileExtensions.any((ext) => file.name.endsWith(ext));
-      if (!isSupported) {
-        scaffoldMessenger.showSnackBar(
-          SnackBar(
-            content: Text(
-              'Only images are supported right now: ${file.mimeType}, ${file.name}, ${file.path}, $imageFileExtensions',
-            ),
-          ),
-        );
-        return;
-      }
-      // To get this extension function please import flutter_quill_extensions
-      _controller.insertImageBlock(
-        imageSource: file.path,
-      );
-      scaffoldMessenger.showSnackBar(
-        const SnackBar(
-          content: Text('Image is inserted.'),
-        ),
-      );
-    };
-  }
-```
+Ensures to replace `assets` with your assets directory name or change the logic to fit your needs.
 
 ## 🤝 Contributing
 
